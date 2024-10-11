@@ -25,10 +25,10 @@ export class User {
   @Column()
   phoneNumber: string;
 
-  @Column({ nullable: true })
-  orderHistory: string;
+  @Column({ type: 'simple-array', nullable: true })
+  orderHistory: string[];
 
-  @Column()
+  @Column({ nullable: true })
   role: string;
 
   @CreateDateColumn({ type: 'timestamp', nullable: true })
