@@ -1,46 +1,60 @@
 import { Request, Response } from 'express';
-import restaurantModule from '../data/restaurantData.js';
+import restaurantRepo from '../database/repositories/restaurantRepository.js';
 
-const getAllRestaurants = (req: Request, res: Response) => {
-  res.status(200).json(restaurantModule.getRestaurants());
+const getAllRestaurants = async (req: Request, res: Response) => {
+  try {
+    const restaurants = await restaurantRepo.getAllRestaurants();
+    res.status(200).json(restaurants);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 };
 
-const getRestaurant = (req: Request, res: Response) => {
+const getRestaurant = async (req: Request, res: Response) => {
   const restaurantId = parseInt(req.params.id);
-  const restaurant = restaurantModule.getRestaurant(restaurantId);
-  if (restaurant) {
+  try {
+    const restaurant = await restaurantRepo.getRestaurant(restaurantId);
     res.status(200).json(restaurant);
-  } else {
-    res.status(404).send(`restaurant not found.`);
+  } catch (err) {
+    res
+      .status(404)
+      .send(`The restaurant with id: ${restaurantId} is not found. Error: ${err}`);
   }
 };
 
-const createRestaurant = (req: Request, res: Response) => {
-  const restaurant = restaurantModule.createRestaurant(req.body);
-  res.status(200).json(restaurant);
-};
-
-const updateRestaurant = (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
-  const restaurant = restaurantModule.getRestaurant(restaurantId);
-  if (!restaurant) {
-    res.status(400).send(`restaurant not found.`);
+const createRestaurant = async (req: Request, res: Response) => {
+  try {
+    const newRestaurant = await restaurantRepo.createRestaurant(req.body);
+    res.status(201).json(newRestaurant);
+  } catch (err) {
+    res.status(400).send(`Restaurant was not successfully created. Error: ${err}`);
   }
-  const updatedRestaurant = restaurantModule.updateRestaurant(
-    restaurantId,
-    req.body
-  );
-  res.status(200).json(updatedRestaurant);
 };
 
-const deleteRestaurant = (req: Request, res: Response) => {
+const updateRestaurant = async (req: Request, res: Response) => {
   const restaurantId = parseInt(req.params.id);
-  const deletedRestaurant = restaurantModule.deleteRestaurant(restaurantId);
+  try {
+    const updatedRestaurant = await restaurantRepo.updateRestaurant(restaurantId, req.body);
+    res.status(200).json(updatedRestaurant);
+  } catch (err) {
+    res
+      .status(404)
+      .send(`The restaurant with id: ${restaurantId} is not found. Error: ${err}`);
+  }
+};
 
-  if (deletedRestaurant) {
-    res.status(200).send(`restaurant deleted successfully.`);
-  } else {
-    res.status(404).send(`restaurant not found.`)
+const deleteRestaurant = async (req: Request, res: Response) => {
+  const restaurantId = parseInt(req.params.id);
+  try {
+    const deletedRestaurant = await restaurantRepo.deleteOneRestaurant(restaurantId);
+    if (!deletedRestaurant) {
+      res.status(404).send(`The restaurant with id: ${restaurantId} is not found.`);
+    }
+    res.status(200).send(`Restaurant deleted successfully.`);
+  } catch (err) {
+    res
+      .status(500)
+      .send(`The restaurant with id: ${restaurantId} is not found. Error: ${err}`);
   }
 }
 

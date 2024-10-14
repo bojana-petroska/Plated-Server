@@ -2,8 +2,7 @@ import { IUser, UserInput } from '../../types/userTypes.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
 
-const connectToDB = await AppDataSource.initialize();
-const userRepository = connectToDB.getRepository(User);
+const userRepository = AppDataSource.getRepository(User);
 
 const getUsers = async (): Promise<IUser[]> => await userRepository.find();
 
@@ -45,10 +44,10 @@ const updateUser = async (
   return user;
 };
 
-const deleteUser = async (user_id: number) => {
+const deleteOneUser = async (user_id: number): Promise<{ message: string }> => {
   const deletedUser = await userRepository.delete({ user_id });
   if (deletedUser.affected === 0) {
-    return null;
+    throw new Error(`User with id: ${user_id} not found.`);
   }
   return { message: `User with id: ${user_id} successfully deleted.` };
 };
@@ -58,5 +57,5 @@ export default {
   getUser,
   createUser,
   updateUser,
-  deleteUser,
+  deleteOneUser,
 };

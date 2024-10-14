@@ -1,12 +1,12 @@
 export interface IMenuItem {
-    id: number;
+    id?: number;
     name: string;
     description: string;
     price: number;
     imageUrl: string;
     availability: boolean;
-    category: string;
-    restaurantId: number;
+    category?: string;
+    restaurantId?: number;
   }
   
   export type MenuItemInput = Omit<IMenuItem, 'id'>;

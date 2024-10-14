@@ -1,5 +1,7 @@
+import { MenuItem } from "../database/entities/MenuItem.js";
+
 export interface IRestaurant {
-  id: number;
+  id?: number;
   name: string;
   password: string;
   address: string;
@@ -7,9 +9,9 @@ export interface IRestaurant {
   email: string;
   openingHours: string;
   deliveryRadius: number;
-  role: string;
-  menu: Array<number>;
-  isOpen: boolean;
+  role?: string;
+  menu?: Array<MenuItem>;
+  isOpen?: boolean;
 }
 
 export type RestaurantInput = Omit<IRestaurant, 'id' | 'menu'>;

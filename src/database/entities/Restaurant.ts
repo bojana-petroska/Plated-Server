@@ -27,7 +27,7 @@ export class Restaurant {
   @Column({ type: 'int' })
   deliveryRadius: number;
 
-  @Column()
+  @Column({ nullable: true })
   role: string;
 
   @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant)
