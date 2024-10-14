@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/', menuItemController.getAllMenuItems);
 router.get('/:id', menuItemController.getMenuItem);
-router.get('/restaurants/:restaurantId', menuItemController.getAllMenuItemsByRestaurant);
+// router.get('/restaurants/:restaurantId', menuItemController.getAllMenuItemsByRestaurant); // access from restaurant
 router.post('/', menuItemController.createMenuItem);
 router.put('/:id', menuItemController.updateMenuItem);
 router.delete('/:id', menuItemController.deleteMenuItem);
