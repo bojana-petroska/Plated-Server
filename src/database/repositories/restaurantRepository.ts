@@ -1,11 +1,31 @@
-import { IRestaurant, RestaurantInput } from '../../types/restaurantTypes.js';
+import {
+  IRestaurant,
+  PaginatedResults,
+  RestaurantInput,
+} from '../../types/types.js';
 import { Restaurant } from '../entities/Restaurant.js';
 import { AppDataSource } from '../ormconfig.js';
 
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
 
-const getAllRestaurants = async (): Promise<IRestaurant[]> =>
-  await restaurantRepository.find();
+const getAllRestaurants = async (
+  page: number,
+  limit: number
+): Promise<PaginatedResults<IRestaurant>> => {
+  const offset = (page - 1) * limit;
+
+  const [restaurants, total] = await restaurantRepository.findAndCount({
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    data: restaurants,
+    totalItems: total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  };
+};
 
 const getRestaurant = async (restaurant_id: number): Promise<IRestaurant> => {
   const restaurant = await restaurantRepository.findOneBy({ restaurant_id });
@@ -39,18 +59,22 @@ const updateRestaurant = async (
   return restaurant;
 };
 
-const deleteOneRestaurant = async (restaurant_id: number): Promise<{ message: string }> => {
-    const deletedRestaurant = await restaurantRepository.delete({ restaurant_id });
-    if (deletedRestaurant.affected === 0) {
-      throw new Error(`User with id: ${restaurant_id} not found.`);
-    }
-    return { message: `User with id: ${restaurant_id} successfully deleted.` };
-  };
+const deleteOneRestaurant = async (
+  restaurant_id: number
+): Promise<{ message: string }> => {
+  const deletedRestaurant = await restaurantRepository.delete({
+    restaurant_id,
+  });
+  if (deletedRestaurant.affected === 0) {
+    throw new Error(`User with id: ${restaurant_id} not found.`);
+  }
+  return { message: `User with id: ${restaurant_id} successfully deleted.` };
+};
 
 export default {
   getAllRestaurants,
   getRestaurant,
   createRestaurant,
   updateRestaurant,
-  deleteOneRestaurant
+  deleteOneRestaurant,
 };

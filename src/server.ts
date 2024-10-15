@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/userRoutes.js';
 import restaurantRouter from './routes/restaurantRoutes.js';
-import menuItemRouter from './routes/menuItemRoutes.js';
 import { AppDataSource } from './database/ormconfig.js';
 
 const app = express();
@@ -13,7 +12,6 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
-app.use('/menu-items', menuItemRouter);
 
 const startServer = async () => {
   try {

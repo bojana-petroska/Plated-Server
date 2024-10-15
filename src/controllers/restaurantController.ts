@@ -2,8 +2,10 @@ import { Request, Response } from 'express';
 import restaurantRepo from '../database/repositories/restaurantRepository.js';
 
 const getAllRestaurants = async (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string)|| 10;
   try {
-    const restaurants = await restaurantRepo.getAllRestaurants();
+    const restaurants = await restaurantRepo.getAllRestaurants(page, limit);
     res.status(200).json(restaurants);
   } catch (err) {
     res.status(500).send(err);
