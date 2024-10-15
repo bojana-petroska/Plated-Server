@@ -2,18 +2,28 @@ import { IMenuItem, MenuItemInput } from '../../types/types.js';
 import { PaginatedResults } from '../../types/types.js';
 import { MenuItem } from '../entities/MenuItem.js';
 import { AppDataSource } from '../ormconfig.js';
+import { Like } from 'typeorm';
 
 const menuItemRepository = AppDataSource.getRepository(MenuItem);
 
 const getAllMenuItemsFromRestaurant = async (
   restaurant_id: number,
   page: number,
-  limit: number
+  limit: number,
+  keyword?: string
 ): Promise<PaginatedResults<IMenuItem>> => {
   const offset = (page - 1) * limit;
 
+  const findMenuItemFromRestaurant: any = {
+    restaurant: { restaurant_id },
+  };
+
+  if (keyword) {
+    findMenuItemFromRestaurant.name = Like(`%${keyword}%`)
+  }
+
   const [menuItems, total] = await menuItemRepository.findAndCount({
-    where: { restaurant: { restaurant_id } },
+    where: findMenuItemFromRestaurant,
     skip: offset,
     take: limit,
   });
@@ -28,7 +38,7 @@ const getAllMenuItemsFromRestaurant = async (
 
 const getSingleMenuItemFromRestaurant = async (
   restaurantId: number,
-  menuItemId: number,
+  menuItemId: number
 ): Promise<IMenuItem> => {
   const menuItem = await menuItemRepository.findOne({
     where: {
@@ -43,11 +53,12 @@ const getSingleMenuItemFromRestaurant = async (
 };
 
 const createMenuItemForARestaurant = async (
-  restaurantId: number, menuItemData: MenuItemInput
+  restaurantId: number,
+  menuItemData: MenuItemInput
 ): Promise<IMenuItem> => {
   const menuItem = {
     ...menuItemData,
-    restaurant: { restaurant_id: restaurantId }
+    restaurant: { restaurant_id: restaurantId },
   };
   const newMenuItem = await menuItemRepository.save(menuItem);
   return newMenuItem;
@@ -71,11 +82,14 @@ const updateMenuItemFromRestaurant = async (
   return await menuItemRepository.save(menuItem);
 };
 
-const deleteOneMenuItemFromRestaurant = async (restaurantId: number, menuItemId: number) => {
+const deleteOneMenuItemFromRestaurant = async (
+  restaurantId: number,
+  menuItemId: number
+) => {
   const deletedMenuItem = await menuItemRepository.delete({
-      menuItem_id: menuItemId,
-      restaurant: { restaurant_id: restaurantId }
-   });
+    menuItem_id: menuItemId,
+    restaurant: { restaurant_id: restaurantId },
+  });
   if (deletedMenuItem.affected === 0) {
     throw new Error(`Menu item with id: ${menuItemId} not found.`);
   }
