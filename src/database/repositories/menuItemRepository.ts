@@ -1,55 +1,91 @@
-import { IMenuItem, MenuItemInput } from '../../types/menuItemTypes.js';
+import { IMenuItem, MenuItemInput } from '../../types/types.js';
+import { PaginatedResults } from '../../types/types.js';
 import { MenuItem } from '../entities/MenuItem.js';
 import { AppDataSource } from '../ormconfig.js';
 
 const menuItemRepository = AppDataSource.getRepository(MenuItem);
 
-const getAllMenuItems = async (): Promise<IMenuItem[]> =>
-  await menuItemRepository.find();
+const getAllMenuItemsFromRestaurant = async (
+  restaurant_id: number,
+  page: number,
+  limit: number
+): Promise<PaginatedResults<IMenuItem>> => {
+  const offset = (page - 1) * limit;
 
-const getMenuItem = async (menuItem_id: number): Promise<IMenuItem> => {
-  const menuItem = await menuItemRepository.findOneBy({ menuItem_id });
+  const [menuItems, total] = await menuItemRepository.findAndCount({
+    where: { restaurant: { restaurant_id } },
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    data: menuItems,
+    totalItems: total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  };
+};
+
+const getSingleMenuItemFromRestaurant = async (
+  restaurantId: number,
+  menuItemId: number,
+): Promise<IMenuItem> => {
+  const menuItem = await menuItemRepository.findOne({
+    where: {
+      menuItem_id: menuItemId,
+      restaurant: { restaurant_id: restaurantId },
+    },
+  });
   if (!menuItem) {
-    throw new Error(`User with id: ${menuItem_id} not found.`);
+    throw new Error(`User with id: ${menuItemId} not found.`);
   }
   return menuItem;
 };
 
-const createMenuItem = async (
-  menuItemData: MenuItemInput
+const createMenuItemForARestaurant = async (
+  restaurantId: number, menuItemData: MenuItemInput
 ): Promise<IMenuItem> => {
   const menuItem = {
     ...menuItemData,
+    restaurant: { restaurant_id: restaurantId }
   };
   const newMenuItem = await menuItemRepository.save(menuItem);
   return newMenuItem;
 };
 
-const updateMenuItem = async (
-  menuItem_id: number,
+const updateMenuItemFromRestaurant = async (
+  restaurantId: number,
+  menuItemId: number,
   updatedMenuItemData: Partial<IMenuItem>
-): Promise<IMenuItem> => {
-  const menuItem = await menuItemRepository.findOneBy({ menuItem_id });
+): Promise<MenuItem> => {
+  const menuItem = await menuItemRepository.findOne({
+    where: {
+      menuItem_id: menuItemId,
+      restaurant: { restaurant_id: restaurantId },
+    },
+  });
   if (!menuItem) {
-    throw new Error(`Menu item with id: ${menuItem_id} not found.`);
+    throw new Error(`Menu item with id: ${menuItemId} not found.`);
   }
   menuItemRepository.merge(menuItem, updatedMenuItemData);
-  await menuItemRepository.save(menuItem);
-  return menuItem;
+  return await menuItemRepository.save(menuItem);
 };
 
-const deleteOneMenuItem = async (menuItem_id: number) => {
-    const deletedMenuItem = await menuItemRepository.delete({ menuItem_id });
+const deleteOneMenuItemFromRestaurant = async (restaurantId: number, menuItemId: number) => {
+  const deletedMenuItem = await menuItemRepository.delete({
+      menuItem_id: menuItemId,
+      restaurant: { restaurant_id: restaurantId }
+   });
   if (deletedMenuItem.affected === 0) {
-    throw new Error(`Menu item with id: ${menuItem_id} not found.`);
+    throw new Error(`Menu item with id: ${menuItemId} not found.`);
   }
-  return { message: `Menu item with id: ${menuItem_id} successfully deleted.` };
-  };
+  return { message: `Menu item with id: ${menuItemId} successfully deleted.` };
+};
 
 export default {
-  getAllMenuItems,
-  getMenuItem,
-  createMenuItem,
-  updateMenuItem,
-  deleteOneMenuItem
+  getAllMenuItemsFromRestaurant,
+  getSingleMenuItemFromRestaurant,
+  createMenuItemForARestaurant,
+  updateMenuItemFromRestaurant,
+  deleteOneMenuItemFromRestaurant,
 };

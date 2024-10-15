@@ -1,4 +1,4 @@
-import { IUser, UserInput } from '../../types/userTypes.js';
+import { IUser, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
 
