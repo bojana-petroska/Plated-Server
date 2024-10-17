@@ -59,10 +59,10 @@ export enum OrderStatus {
 }
 
 export interface IOrder {
-  id?: number;
+  orderId?: number;
   userId: number;
   restaurantId: number;
-  menuItems: Array<{
+  orderItems: Array<{
     menuItemId: number;
     quantity: number;
   }>;
@@ -72,7 +72,10 @@ export interface IOrder {
   updatedAt: Date;
 }
 
-export type OrderInput = Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>;
+export type OrderInput = Omit<
+  IOrder,
+  'id' | 'status' | 'createdAt' | 'updatedAt'
+>;
 
 export interface ICart {
   id?: number;
@@ -92,5 +95,5 @@ export interface IOrderItem {
   id?: number;
   orderId: number;
   menuItemId: number;
-  quantity: number
+  quantity: number;
 }

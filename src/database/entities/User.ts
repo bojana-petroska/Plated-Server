@@ -3,7 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
+  Relation,
 } from 'typeorm';
+import { Order } from './Order.js';
 
 @Entity()
 export class User {
@@ -33,4 +36,7 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp', nullable: true })
   createdAt: Date;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Relation<Order[]>;
 }

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, UpdateDateColumn, OneToMany, Relation } from 'typeorm';
 import { User } from './User.js';
 import { OrderItem } from './OrderItem.js';
 
@@ -11,7 +11,7 @@ export class Cart {
   user: User;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
-  orderItems: OrderItem[];
+  orderItems: Relation<OrderItem[]>;
 
   @CreateDateColumn()
   createdAt: Date;

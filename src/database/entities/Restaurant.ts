@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Relation } from 'typeorm';
 import { MenuItem } from './MenuItem.js';
+import { Order } from './Order.js';
 
 @Entity()
 export class Restaurant {
@@ -31,8 +32,11 @@ export class Restaurant {
   role: string;
 
   @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant)
-  menu: MenuItem[];
+  menu: Relation<MenuItem[]>;
 
   @Column({ type: 'bool', default: true, nullable: true })
   isOpen: boolean;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Relation<Order[]>;
 }
