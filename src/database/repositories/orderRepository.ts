@@ -71,9 +71,8 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   await orderRepository.save(newOrder);
 
-  // Transform the orderItems to match IOrder structure
   const transformedOrderItems = orderItemsEntities.map(item => ({
-    menuItemId: item.menuItem.menuItem_id, // Assuming menuItem has a property called menuItem_id
+    menuItemId: item.menuItem.menuItem_id,
     quantity: item.quantity,
   }));
 
