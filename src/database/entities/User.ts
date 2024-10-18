@@ -7,6 +7,7 @@ import {
   Relation,
 } from 'typeorm';
 import { Order } from './Order.js';
+import { IOrder } from '../../types/types.js';
 
 @Entity()
 export class User {
@@ -29,7 +30,7 @@ export class User {
   phoneNumber: string;
 
   @Column({ type: 'simple-array', nullable: true })
-  orderHistory: string[];
+  orderHistory: IOrder[];
 
   @Column({ nullable: true })
   role: string;

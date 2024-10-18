@@ -10,7 +10,7 @@ export class OrderItem {
   @ManyToOne(() => Order, (order) => order.orderItems)
   order: Relation<Order>;
 
-  @ManyToOne(() => MenuItem)
+  @ManyToOne(() => MenuItem, (menuItem) => menuItem.orderItems)
   menuItem: Relation<MenuItem>;
  
   @Column()

@@ -37,6 +37,6 @@ export class Restaurant {
   @Column({ type: 'bool', default: true, nullable: true })
   isOpen: boolean;
 
-  @OneToMany(() => Order, (order) => order.user)
+  @OneToMany(() => Order, (order) => order.restaurant, { cascade: true })
   orders: Relation<Order[]>;
 }

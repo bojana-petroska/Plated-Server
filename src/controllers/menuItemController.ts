@@ -3,6 +3,7 @@ import menuItemRepo from '../database/repositories/menuItemRepository.js';
 
 const getAllMenuItems = async (req: Request, res: Response) => {
   const restaurantId = parseInt(req.params.id) || -1;
+  console.log(restaurantId)
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const keyword = req.query.keyword as string || undefined;

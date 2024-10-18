@@ -11,6 +11,7 @@ router.post('/', validator, userController.createUser);
 router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 
+router.get('/:id/menu', orderController.getAllOrders)
 router.post('/:id/orders', orderController.createOrder);
 
 export default router;

@@ -1,5 +1,3 @@
-import { MenuItem } from '../database/entities/MenuItem.js';
-
 export interface PaginatedResults<T> {
   data: T[];
   totalItems: number;
@@ -17,7 +15,7 @@ export interface IRestaurant {
   openingHours: string;
   deliveryRadius: number;
   role?: string;
-  menu?: Array<MenuItem>;
+  menu?: IMenuItem[];
   isOpen?: boolean;
 }
 
@@ -43,7 +41,7 @@ export interface IUser {
   password: string;
   address: string;
   phoneNumber: string;
-  orderHistory?: Array<string>;
+  orderHistory?: IOrder[];
   role?: string;
   createdAt?: Date;
 }
@@ -59,13 +57,10 @@ export enum OrderStatus {
 }
 
 export interface IOrder {
-  orderId?: number;
+  id?: number;
   userId: number;
   restaurantId: number;
-  orderItems: Array<{
-    menuItemId: number;
-    quantity: number;
-  }>;
+  orderItems: IOrderItem[];
   totalPrice: number;
   status: OrderStatus;
   createdAt: Date;
@@ -80,11 +75,7 @@ export type OrderInput = Omit<
 export interface ICart {
   id?: number;
   userId: number;
-  orderItems: Array<{
-    orderId?: number;
-    menuItemId: number;
-    quantity: number;
-  }>;
+  orderItems: IOrderItem[];
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -93,7 +84,7 @@ export type CartInput = Omit<ICart, 'id' | 'createdAt' | 'updatedAt'>;
 
 export interface IOrderItem {
   id?: number;
-  orderId: number;
-  menuItemId: number;
+  order: IOrder;
+  menuItem: IMenuItem;
   quantity: number;
 }

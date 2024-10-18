@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   ManyToOne,
-  ManyToMany,
   OneToMany,
   UpdateDateColumn,
   Relation,

@@ -1,4 +1,4 @@
-import { IOrder, OrderInput, PaginatedResults } from '../../types/types.js';
+import { IOrder, IOrderItem, OrderInput, PaginatedResults } from '../../types/types.js';
 import { MenuItem } from '../entities/MenuItem.js';
 import { Order } from '../entities/Order.js';
 import { OrderItem } from '../entities/OrderItem.js';
@@ -11,17 +11,29 @@ const userRepository = AppDataSource.getRepository(User);
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
 const menuItemRepository = AppDataSource.getRepository(MenuItem);
 
-// User endpoints
-// const getAllOrdersFromUser = async (
-//   user_id: number,
-//   page: number,
-//   limit: number
-// ): Promise<PaginatedResults<IOrder>> => {
-//   const offset = (page - 1) * limit;
-//   return {
-//     data: offset,
-//   };
-// };
+const getAllOrdersFromUser = async (
+  user_id: number,
+  page: number,
+  limit: number
+): Promise<PaginatedResults<IOrder>> => {
+  const user = await userRepository.findOneBy({ user_id: user_id });
+  if (!user) throw new Error('User not found.');
+
+  const offset = (page - 1) * limit;
+
+  const [orders, total] = await orderRepository.findAndCount({
+    where: {userId: user_id},
+    skip: offset,
+    take: limit
+  });
+
+  return {
+    data: orders,
+    totalItems: total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  };
+};
 
 const getOneOrderFromUser = () => {};
 
@@ -40,11 +52,11 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   const orderItemsEntities = await Promise.all(
     orderItems.map(async (item) => {
       const menuItem = await menuItemRepository.findOneBy({
-        menuItem_id: item.menuItemId,
+        menuItem_id: item.menuItem.id,
       });
 
       if (!menuItem)
-        throw new Error(`Menu item with id: ${item.menuItemId} not found.`);
+        throw new Error(`Menu item with id: ${item.menuItem} not found.`);
 
       const orderItem = new OrderItem();
       orderItem.menuItem = menuItem;
@@ -71,13 +83,15 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   await orderRepository.save(newOrder);
 
-  const transformedOrderItems = orderItemsEntities.map(item => ({
-    menuItemId: item.menuItem.menuItem_id,
+  const transformedOrderItems: IOrderItem[] = orderItemsEntities.map(item => ({
+    id: item.orderItem_id,
+    order: newOrder,
+    menuItem: item.menuItem,
     quantity: item.quantity,
   }));
 
   return {
-    orderId: newOrder.order_id,
+    id: newOrder.order_id,
     userId: newOrder.userId,
     restaurantId: newOrder.restaurantId,
     totalPrice: newOrder.totalPrice,
@@ -88,7 +102,9 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   };
 };
 
-const updateOrderFromUser = () => {};
+const updateOrderFromUser = () => {
+    
+};
 
 const cancelOrderFromUser = () => {};
 
@@ -102,7 +118,7 @@ const updateOrderStatusFromRestaurant = () => {};
 const cancelOrderFromRestaurant = () => {};
 
 export default {
-//   getAllOrdersFromUser,
+  getAllOrdersFromUser,
   getOneOrderFromUser,
   createOrderFromUser,
   updateOrderFromUser,
