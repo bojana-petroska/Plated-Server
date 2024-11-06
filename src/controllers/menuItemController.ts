@@ -2,10 +2,12 @@ import { Request, Response } from 'express';
 import menuItemRepo from '../database/repositories/menuItemRepository.js';
 
 const getAllMenuItems = async (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
+  const restaurantId = parseInt(req.params.id) || -1;
+  console.log(restaurantId)
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const keyword = req.query.keyword as string || undefined;
+
   try {
     const menuItems = await menuItemRepo.getAllMenuItemsFromRestaurant(
       restaurantId,
@@ -24,8 +26,9 @@ const getAllMenuItems = async (req: Request, res: Response) => {
 };
 
 const getMenuItem = async (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
+  const restaurantId = parseInt(req.params.id) || -1;
   const menuItemId = parseInt(req.params.menuItem_id);
+
   try {
     const menuItem = await menuItemRepo.getSingleMenuItemFromRestaurant(
       restaurantId,
@@ -42,7 +45,8 @@ const getMenuItem = async (req: Request, res: Response) => {
 };
 
 const createMenuItem = async (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
+  const restaurantId = parseInt(req.params.id) || -1;
+
   try {
     const newMenuItem = await menuItemRepo.createMenuItemForARestaurant(
       restaurantId,
@@ -57,8 +61,9 @@ const createMenuItem = async (req: Request, res: Response) => {
 };
 
 const updateMenuItem = async (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
+  const restaurantId = parseInt(req.params.id) || -1;
   const menuItemId = parseInt(req.params.menuItem_id);
+
   try {
     const updatedMenuItem = await menuItemRepo.updateMenuItemFromRestaurant(
       restaurantId,
@@ -74,8 +79,9 @@ const updateMenuItem = async (req: Request, res: Response) => {
 };
 
 const deleteMenuItem = async (req: Request, res: Response) => {
-  const restaurantId = parseInt(req.params.id);
+  const restaurantId = parseInt(req.params.id) || -1;
   const menuItemId = parseInt(req.params.menuItem_id);
+  
   try {
     const deletedMenuItem = await menuItemRepo.deleteOneMenuItemFromRestaurant(
       restaurantId,
