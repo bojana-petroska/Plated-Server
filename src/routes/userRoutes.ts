@@ -1,7 +1,7 @@
-import userController from '../controllers/userController.js';
 import { Router } from 'express';
+import userController from '../controllers/userController.js';
+import orderRoutes from '../routes/orderRoutes.js'
 import validator from '../middlewares/validation.js';
-import orderController from '../controllers/orderController.js';
 
 const router = Router();
 
@@ -11,7 +11,6 @@ router.post('/', validator, userController.createUser);
 router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 
-router.get('/:id/menu', orderController.getAllOrders)
-router.post('/:id/orders', orderController.createOrder);
+router.use('/:id/orders', orderRoutes);
 
 export default router;

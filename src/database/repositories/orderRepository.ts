@@ -38,6 +38,14 @@ const getAllOrdersFromUser = async (
 const getOneOrderFromUser = () => {};
 
 const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
+  // find user
+  // const user = await userRepository.getUser(userId);
+  // find restaurant
+  //const restaurant = await restaurantRepository.getRestaurant(restaurantId);
+  // convert menu items to order items
+  // create order
+  // send notification
+
   const { userId, restaurantId, orderItems } = orderInput;
 
   const user = await userRepository.findOneBy({ user_id: userId });
@@ -51,6 +59,11 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   const orderItemsEntities = await Promise.all(
     orderItems.map(async (item) => {
+      // const menuItemId = item.menuItem.id as number;
+      // const menuItem = await menuItemRepository.getSingleMenuItemFromRestaurant(
+      //   restaurantId,
+      //   menuItemId
+      // );
       const menuItem = await menuItemRepository.findOneBy({
         menuItem_id: item.menuItem.id,
       });
