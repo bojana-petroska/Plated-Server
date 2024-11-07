@@ -3,6 +3,10 @@ import cors from 'cors';
 import userRouter from './routes/userRoutes.js';
 import restaurantRouter from './routes/restaurantRoutes.js';
 import { AppDataSource } from './database/ormconfig.js';
+import dotenv from 'dotenv';
+import errorHandler from './middlewares/errorHandling.js';
+
+dotenv.config();
 
 const app = express();
 const port = 5001;
@@ -12,6 +16,8 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
+
+app.use(errorHandler);
 
 const startServer = async () => {
   try {

@@ -1,6 +1,7 @@
 import { IUser, PaginatedResults, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
+import bcrypt from 'bcrypt';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -34,10 +35,17 @@ const createUser = async ({
   email,
   password,
 }: UserInput): Promise<IUser> => {
+  const existingUser = await userRepository.findOne({ where:[{userName, email}] });
+  if (existingUser) {
+    throw new Error(`Username or email already exists. Please choose a different username or email.`);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = {
     userName,
     email,
-    password,
+    password: hashedPassword,
     address: '',
     phoneNumber: '',
     createdAt: new Date(),

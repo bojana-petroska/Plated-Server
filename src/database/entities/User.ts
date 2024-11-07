@@ -22,6 +22,12 @@ export class User {
 
   @Column()
   password: string;
+  
+  @Column()
+  token: string;
+
+  @Column()
+  refreshToken: string;
 
   @Column()
   address: string;
