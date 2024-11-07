@@ -39,7 +39,6 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
       message: 'Internal Server Error',
       error: (error as Error).message,
     });
-    return;
   }
 };
 
