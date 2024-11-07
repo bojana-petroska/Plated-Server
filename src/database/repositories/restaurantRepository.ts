@@ -15,6 +15,17 @@ const getAllRestaurants = async (
   const offset = (page - 1) * limit;
 
   const [restaurants, total] = await restaurantRepository.findAndCount({
+    select: [
+      'restaurant_id',
+      'name',
+      'address',
+      'phoneNumber',
+      'email',
+      'openingHours',
+      'deliveryRadius',
+      'role',
+      'isOpen',
+    ],
     skip: offset,
     take: limit,
   });

@@ -1,10 +1,25 @@
-import { IUser, UserInput } from '../../types/types.js';
+import { IUser, PaginatedResults, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
 
 const userRepository = AppDataSource.getRepository(User);
 
-const getUsers = async (): Promise<IUser[]> => await userRepository.find();
+const getUsers = async (page: number,
+  limit: number): Promise<PaginatedResults<IUser>> => {
+  const offset = (page - 1) * limit;
+
+  const [users, total] = await userRepository.findAndCount({
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    data: users,
+    totalItems: total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  };
+}
 
 const getUser = async (user_id: number): Promise<IUser> => {
   const user = await userRepository.findOneBy({ user_id });
