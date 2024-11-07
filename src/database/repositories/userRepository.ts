@@ -1,10 +1,26 @@
-import { IUser, UserInput } from '../../types/types.js';
+import { IUser, PaginatedResults, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
+import bcrypt from 'bcrypt';
 
 const userRepository = AppDataSource.getRepository(User);
 
-const getUsers = async (): Promise<IUser[]> => await userRepository.find();
+const getUsers = async (page: number,
+  limit: number): Promise<PaginatedResults<IUser>> => {
+  const offset = (page - 1) * limit;
+
+  const [users, total] = await userRepository.findAndCount({
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    data: users,
+    totalItems: total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  };
+}
 
 const getUser = async (user_id: number): Promise<IUser> => {
   const user = await userRepository.findOneBy({ user_id });
@@ -19,10 +35,17 @@ const createUser = async ({
   email,
   password,
 }: UserInput): Promise<IUser> => {
+  const existingUser = await userRepository.findOne({ where:[{userName, email}] });
+  if (existingUser) {
+    throw new Error(`Username or email already exists. Please choose a different username or email.`);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = {
     userName,
     email,
-    password,
+    password: hashedPassword,
     address: '',
     phoneNumber: '',
     createdAt: new Date(),
