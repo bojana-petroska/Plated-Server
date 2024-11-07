@@ -21,6 +21,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 const createOrder = async (req: Request, res: Response) => {
   try {
     const newOrder = await orderRepo.createOrderFromUser(req.body);
+    console.log(newOrder);
     res.status(201).json(newOrder);
   } catch (err) {
     res.status(400).send(`Order was not successfully created. Error: ${err}`);

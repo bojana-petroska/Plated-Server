@@ -17,6 +17,7 @@ const getUser = async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
   try {
     const user = await userRepo.getUser(userId);
+    console.log(user)
     res.status(200).json(user);
   } catch (err) {
     res

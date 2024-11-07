@@ -27,6 +27,8 @@ const getAllOrdersFromUser = async (
     take: limit
   });
 
+  console.log(orders);
+
   return {
     data: orders,
     totalItems: total,
@@ -115,9 +117,17 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   };
 };
 
-const updateOrderFromUser = () => {
-    
-};
+// const updateOrderFromUser = async (order_id: number, user_id: number): Promise<IOrder> => {
+//   // find order
+//   const order = await orderRepository.findOneBy({ order_id: order_id });
+//   const user = await userRepository.findOneBy({ user_id: user_id });
+//   if (!order || !user) throw new Error('User or order not found.');
+
+//   return order;
+
+//   // update order status
+//   // send notification
+// };
 
 const cancelOrderFromUser = () => {};
 
@@ -134,7 +144,7 @@ export default {
   getAllOrdersFromUser,
   getOneOrderFromUser,
   createOrderFromUser,
-  updateOrderFromUser,
+  // updateOrderFromUser,
   cancelOrderFromUser,
   getAllOrdersFromRestaurant,
   getOneOrderFromRestaurant,
