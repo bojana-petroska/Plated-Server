@@ -43,6 +43,8 @@ export interface IUser {
   phoneNumber: string;
   orderHistory?: IOrder[];
   role?: string;
+  token?: string;
+  refreshToken?: string;
   createdAt?: Date;
 }
 

@@ -18,7 +18,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, (err) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
           res
@@ -31,7 +31,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
       }
 
       // Store the decoded user information
-      req.user = decoded;
+      //req.user = decoded;
       next();
     });
   } catch (error) {

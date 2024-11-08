@@ -4,11 +4,15 @@ import jwt from 'jsonwebtoken';
 import { IUser } from '../types/types.js';
 import { User } from '../database/entities/User.js';
 import { AppDataSource } from '../database/ormconfig.js';
+import userRepo from '../database/repositories/userRepository.js';
 
 const userRepository = AppDataSource.getRepository(User);
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+// const JWT_SECRET = process.env.JWT_SECRET;
+// const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+const JWT_SECRET = 'a5c0effbf8a398bface402709bd41970e057b217b5b52c1d580851198f92767898e0a32088cb05a032a683e6ad2f64c6172325df6f4e43d3d0768ccc61298273';
+const JWT_REFRESH_SECRET = '00ba9e45d8a6a4918ec0fa1741161f4c268f82fb693511c957c3244f421f7ac6d651dfb01d0530f7a0d35f5bca798e161848dba44d06d232e48907d8ef3df688';
 
 const generateAccessToken = ({
   user,
@@ -34,25 +38,50 @@ const generateRefreshToken = ({
   return refreshToken;
 };
 
+// const signUp = async (req: Request, res: Response) => {
+//   const { userName, email, password } = req.body;
+//   console.log(JWT_SECRET);
+//   try {
+//     if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+//       console.log('JWT Secrets Not Found');
+//       res.status(500).send('JWT Secret Not Found');
+//       return;
+//     }
+//     const { user, token, refreshToken } = await userRepo.createUser({ userName, email, password });
+
+//     res.status(201).send({
+//       message: 'User created successfully.',
+//       data: { user, token, refreshToken },
+//     });
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// };
+
 const signUp = async (req: Request, res: Response) => {
   const { userName, email, password } = req.body;
+  console.log(JWT_SECRET);
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('Hashed Password', hashedPassword);
-    const newUser = {
-      userName,
-      email,
-      password: hashedPassword,
-      address: '',
-      phoneNumber: '',
-      createdAt: new Date(),
-    };
-    await userRepository.save(newUser);
+    if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+      res.status(500).send('JWT secrets are missing.');
+      return;
+    }
+
+    const user = await userRepo.createUser({ userName, email, password });
+
+    const token = generateAccessToken({ user, JWT_SECRET });
+    const refreshToken = generateRefreshToken({ user, JWT_REFRESH_SECRET });
+
+    user.token = token;
+    user.refreshToken = refreshToken;
+    await userRepository.save(user);
+
     res.status(201).send({
       message: 'User created successfully.',
+      data: { user, token, refreshToken },
     });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(400).send({ message: 'User not created.', error: error });
   }
 };
 
@@ -98,29 +127,34 @@ const signIn = async (req: Request, res: Response) => {
 const handelRefreshTokenGeneration = async (req: Request, res: Response) => {
   const refreshToken: string = req.body.refreshToken;
   if (!refreshToken) {
-    res.status(401).send('refreshtoken required');
+    res.status(401).send('Refresh Token required');
     return;
   }
   try {
     const user = await userRepository.findOneBy({ refreshToken });
     console.log(user);
+
     if (!user) {
       res.status(403).send('Invalid Refresh Token');
       return;
     }
+
     if (!JWT_REFRESH_SECRET) {
       res.status(500).send('Refresh secret Not Found');
       return;
     }
+
     jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err, decode) => {
       if (err) {
         res.status(403).send('Invalid Refresh Token');
         return;
       }
+
       if (!JWT_SECRET) {
         res.status(500).send('Secret Not Found');
         return;
       }
+
       const token = generateAccessToken({ user, JWT_SECRET });
       res.status(200).send({ token });
     });
@@ -130,6 +164,8 @@ const handelRefreshTokenGeneration = async (req: Request, res: Response) => {
 };
 
 export default {
+  generateAccessToken,
+  generateRefreshToken,
   signUp,
   signIn,
   handelRefreshTokenGeneration,

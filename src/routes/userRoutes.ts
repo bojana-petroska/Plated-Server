@@ -3,13 +3,8 @@ import userController from '../controllers/userController.js';
 import orderRoutes from '../routes/orderRoutes.js'
 import validator from '../middlewares/validation.js';
 import auth from '../middlewares/auth.js';
-import authController from '../controllers/authController.js';
 
 const router = Router();
-
-router.post('/signup', authController.signUp);
-router.post('/signin', authController.signIn);
-router.post('/refreshtoken', authController.handelRefreshTokenGeneration);
 
 router.get('/', auth, userController.getAllUsers);
 router.get('/:id', auth, userController.getUser);
