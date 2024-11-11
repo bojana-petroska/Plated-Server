@@ -56,8 +56,7 @@ const generateRefreshToken = ({
 //   } catch (error) {
 //     res.status(400).send(error);
 //   }
-// };
-
+// }
 const signUp = async (req: Request, res: Response) => {
   const { userName, email, password } = req.body;
   console.log(JWT_SECRET);
@@ -69,16 +68,11 @@ const signUp = async (req: Request, res: Response) => {
 
     const user = await userRepo.createUser({ userName, email, password });
 
-    const token = generateAccessToken({ user, JWT_SECRET });
-    const refreshToken = generateRefreshToken({ user, JWT_REFRESH_SECRET });
-
-    user.token = token;
-    user.refreshToken = refreshToken;
     await userRepository.save(user);
 
     res.status(201).send({
       message: 'User created successfully.',
-      data: { user, token, refreshToken },
+      data: { user },
     });
   } catch (error) {
     res.status(400).send({ message: 'User not created.', error: error });
@@ -86,28 +80,34 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const signIn = async (req: Request, res: Response) => {
+  // console.log(req.body)
   const { email, password } = req.body;
+  console.log('INPUT PASSWORD:', password)
   try {
     const user = await userRepository.findOneBy({ email });
     if (!user) {
       res.status(404).send('User Not Found!');
       return;
     }
+
+    console.log("Stored Hashed Password:", user.password);
+    console.log("Input password for comparison:", password);
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match result:", isMatch);
 
     if (!isMatch) {
-      res.status(401).send('Password in wrong');
+      res.status(401).send('Password is wrong');
       return;
     }
     if (!JWT_SECRET) {
       res.status(500).send('Secret Not Found');
       return;
     }
-    const token = generateAccessToken({ user, JWT_SECRET });
     if (!JWT_REFRESH_SECRET) {
       res.status(500).send('Refresh secret Not Found');
       return;
     }
+    const token = generateAccessToken({ user, JWT_SECRET });
     const refreshToken = generateRefreshToken({ user, JWT_REFRESH_SECRET });
 
     user.refreshToken = refreshToken;
@@ -120,6 +120,7 @@ const signIn = async (req: Request, res: Response) => {
       data: { token, refreshToken },
     });
   } catch (error) {
+    console.error("SignIn error:", error);
     res.status(500).send(error);
   }
 };

@@ -92,10 +92,11 @@ const createUser = async ({ userName, email, password }: UserInput): Promise<IUs
   const existingUser = await userRepository.findOne({ where: [{ userName }, { email }] });
   
   if (existingUser) {
-    alert('Username or email already exists.');
+    throw new Error('Username or email already exists.');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  console.log('hashed password!:', hashedPassword);
 
   const newUser = userRepository.create({
     userName,

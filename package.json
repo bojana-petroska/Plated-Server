@@ -8,7 +8,8 @@
     "dev": "nodemon --exec ts-node --esm src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "seed": "nodemon --exec ts-node --esm src/database/seedDatabase.ts"
+    "seed": "nodemon --exec ts-node --esm src/database/seedDatabase.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -31,9 +32,12 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/hapi__joi": "^17.1.14",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.5",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.7",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }
