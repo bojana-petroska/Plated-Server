@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+// const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = 'a5c0effbf8a398bface402709bd41970e057b217b5b52c1d580851198f92767898e0a32088cb05a032a683e6ad2f64c6172325df6f4e43d3d0768ccc61298273';
+
 const auth = (req: Request, res: Response, next: NextFunction) => {
   // Extract Bearer token
   const token = req.headers['authorization']?.split(' ')[1];
@@ -9,7 +12,6 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  const JWT_SECRET = process.env.JWT_SECRET;
   if (!JWT_SECRET) {
     res
       .status(500)
@@ -18,7 +20,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    jwt.verify(token, JWT_SECRET, (err) => {
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
           res
@@ -31,7 +33,8 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
       }
 
       // Store the decoded user information
-      //req.user = decoded;
+      // req.user = decoded;
+      req.userId = (decoded as any).id;
       next();
     });
   } catch (error) {

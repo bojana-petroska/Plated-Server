@@ -65,10 +65,12 @@ const signUp = async (req: Request, res: Response) => {
       res.status(500).send('JWT secrets are missing.');
       return;
     }
-
+    
+    // console.log('hashed password!:', hashedPassword)
     const user = await userRepo.createUser({ userName, email, password });
+    console.log('STORED PASSWORD', user.password)
 
-    await userRepository.save(user);
+    // await userRepository.save(user);
 
     res.status(201).send({
       message: 'User created successfully.',
@@ -81,10 +83,10 @@ const signUp = async (req: Request, res: Response) => {
 
 const signIn = async (req: Request, res: Response) => {
   // console.log(req.body)
-  const { email, password } = req.body;
+  const { userName, password } = req.body;
   console.log('INPUT PASSWORD:', password)
   try {
-    const user = await userRepository.findOneBy({ email });
+    const user = await userRepository.findOneBy({ userName });
     if (!user) {
       res.status(404).send('User Not Found!');
       return;
@@ -125,7 +127,7 @@ const signIn = async (req: Request, res: Response) => {
   }
 };
 
-const handelRefreshTokenGeneration = async (req: Request, res: Response) => {
+const handleRefreshTokenGeneration = async (req: Request, res: Response) => {
   const refreshToken: string = req.body.refreshToken;
   if (!refreshToken) {
     res.status(401).send('Refresh Token required');
@@ -169,5 +171,5 @@ export default {
   generateRefreshToken,
   signUp,
   signIn,
-  handelRefreshTokenGeneration,
+  handleRefreshTokenGeneration,
 };
