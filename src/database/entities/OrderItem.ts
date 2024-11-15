@@ -1,17 +1,17 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, ManyToOne, PrimaryGeneratedColumn, Column, Relation } from 'typeorm';
 import { Order } from './Order.js';
 import { MenuItem } from './MenuItem.js';
 
 @Entity()
 export class OrderItem {
   @PrimaryGeneratedColumn()
-  id: number;
+  orderItem_id: number;
 
   @ManyToOne(() => Order, (order) => order.orderItems)
-  order: Order;
+  order: Relation<Order>;
 
-  @ManyToOne(() => MenuItem)
-  menuItem: MenuItem;
+  @ManyToOne(() => MenuItem, (menuItem) => menuItem.orderItems)
+  menuItem: Relation<MenuItem>;
  
   @Column()
   quantity: number;

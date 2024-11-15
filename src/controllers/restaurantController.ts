@@ -6,6 +6,7 @@ const getAllRestaurants = async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string)|| 10;
   try {
     const restaurants = await restaurantRepo.getAllRestaurants(page, limit);
+    console.log(restaurants)
     res.status(200).json(restaurants);
   } catch (err) {
     res.status(500).send(err);

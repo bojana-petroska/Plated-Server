@@ -1,5 +1,3 @@
-import { MenuItem } from '../database/entities/MenuItem.js';
-
 export interface PaginatedResults<T> {
   data: T[];
   totalItems: number;
@@ -17,7 +15,7 @@ export interface IRestaurant {
   openingHours: string;
   deliveryRadius: number;
   role?: string;
-  menu?: Array<MenuItem>;
+  menu?: IMenuItem[];
   isOpen?: boolean;
 }
 
@@ -43,8 +41,10 @@ export interface IUser {
   password: string;
   address: string;
   phoneNumber: string;
-  orderHistory?: Array<string>;
+  orderHistory?: IOrder[];
   role?: string;
+  token?: string;
+  refreshToken?: string;
   createdAt?: Date;
 }
 
@@ -62,26 +62,22 @@ export interface IOrder {
   id?: number;
   userId: number;
   restaurantId: number;
-  menuItems: Array<{
-    menuItemId: number;
-    quantity: number;
-  }>;
+  orderItems: IOrderItem[];
   totalPrice: number;
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type OrderInput = Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>;
+export type OrderInput = Omit<
+  IOrder,
+  'id' | 'status' | 'createdAt' | 'updatedAt'
+>;
 
 export interface ICart {
   id?: number;
   userId: number;
-  orderItems: Array<{
-    orderId?: number;
-    menuItemId: number;
-    quantity: number;
-  }>;
+  orderItems: IOrderItem[];
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -90,7 +86,7 @@ export type CartInput = Omit<ICart, 'id' | 'createdAt' | 'updatedAt'>;
 
 export interface IOrderItem {
   id?: number;
-  orderId: number;
-  menuItemId: number;
-  quantity: number
+  order: IOrder;
+  menuItem: IMenuItem;
+  quantity: number;
 }

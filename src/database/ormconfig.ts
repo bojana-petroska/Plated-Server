@@ -2,6 +2,9 @@ import { DataSource } from 'typeorm';
 import { User } from './entities/User.js';
 import { Restaurant } from './entities/Restaurant.js';
 import { MenuItem } from './entities/MenuItem.js';
+import { Cart } from './entities/Cart.js';
+import { Order } from './entities/Order.js';
+import { OrderItem } from './entities/OrderItem.js';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -12,5 +15,5 @@ export const AppDataSource = new DataSource({
   database: 'plated_food_app',
   synchronize: true,
   logging: true,
-  entities: [User, Restaurant, MenuItem],
+  entities: [User, Restaurant, MenuItem, Cart, Order, OrderItem],
 });

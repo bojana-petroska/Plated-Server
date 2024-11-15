@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation, OneToMany } from 'typeorm';
 import { Restaurant } from './Restaurant.js';
+import { OrderItem } from './OrderItem.js';
 
 @Entity('menu_items')
 export class MenuItem {
@@ -26,4 +27,7 @@ export class MenuItem {
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.menu)
   restaurant: Relation<Restaurant>;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.menuItem)
+  orderItems: Relation<OrderItem[]>;
 }
