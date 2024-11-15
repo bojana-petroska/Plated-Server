@@ -33,6 +33,14 @@ const getUser = async (user_id: number): Promise<IUser> => {
   return user;
 };
 
+const getUserProfileData = async (userName: string | undefined): Promise<IUser> => {
+  const user = await userRepository.findOneBy({ userName });
+  if (!user) {
+    throw new Error(`User with id: ${userName} not found.`);
+  }
+  return user;
+}
+
 // const createUser = async ({
 //   userName,
 //   email,
@@ -137,6 +145,7 @@ const deleteOneUser = async (user_id: number): Promise<{ message: string }> => {
 export default {
   getUsers,
   getUser,
+  getUserProfileData,
   createUser,
   updateUser,
   deleteOneUser,
