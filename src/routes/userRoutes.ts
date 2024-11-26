@@ -7,7 +7,7 @@ import isAuthenticated from '../middlewares/isAuthenticated.js';
 
 const router = Router();
 
-router.get('/', isAuthenticated, userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 router.get('/profile', isAuthenticated, userController.getUserProfileData);
 router.get('/:id', isAuthenticated, userController.getUser);
 router.post('/', validator, userController.createUser);

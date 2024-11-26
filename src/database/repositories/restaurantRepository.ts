@@ -5,6 +5,7 @@ import {
 } from '../../types/types.js';
 import { Restaurant } from '../entities/Restaurant.js';
 import { AppDataSource } from '../ormconfig.js';
+import bcrypt from 'bcrypt';
 
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
 
@@ -46,15 +47,38 @@ const getRestaurant = async (restaurant_id: number): Promise<IRestaurant> => {
   return restaurant;
 };
 
-const createRestaurant = async (
-  restaurantData: RestaurantInput
-): Promise<IRestaurant> => {
-  const restaurant = {
-    ...restaurantData,
+const createRestaurant = async ({
+  name,
+  password,
+}: RestaurantInput): Promise<IRestaurant> => {
+  const existingRestaurant = await restaurantRepository.findOne({
+    where: [{ name }],
+  });
+
+  if (existingRestaurant) {
+    throw new Error('Restaurant already exists.');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log('hashed password!:', hashedPassword);
+
+  const newRestaurant = restaurantRepository.create({
+    name,
+    password: hashedPassword,
+    token: '',
+    refreshToken: '',
+    address: '',
+    phoneNumber: '',
+    email:'',
+    openingHours: '',
+    deliveryRadius: 0,
+    role: '',
     menu: [],
-  };
-  const newRestaurant = await restaurantRepository.save(restaurant);
-  return newRestaurant;
+    isOpen: false,
+  });
+
+  console.log(newRestaurant);
+  return await restaurantRepository.save(newRestaurant);
 };
 
 const updateRestaurant = async (

@@ -13,19 +13,25 @@ export class Restaurant {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
+  token: string;
+
+  @Column({ nullable: true })
+  refreshToken: string;
+
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   phoneNumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   openingHours: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true  })
   deliveryRadius: number;
 
   @Column({ nullable: true })

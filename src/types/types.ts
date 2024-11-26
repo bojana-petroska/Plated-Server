@@ -9,11 +9,11 @@ export interface IRestaurant {
   id?: number;
   name: string;
   password: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-  openingHours: string;
-  deliveryRadius: number;
+  address?: string;
+  phoneNumber?: string;
+  email?: string;
+  openingHours?: string;
+  deliveryRadius?: number;
   role?: string;
   menu?: IMenuItem[];
   isOpen?: boolean;

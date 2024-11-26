@@ -6,7 +6,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string) || 10;
   try {
     const users = await userRepo.getUsers(page, limit);
-    console.log(users);
+    // console.log(users);
     res.status(200).json(users);
   } catch (err) {
     res.status(500).send(err);

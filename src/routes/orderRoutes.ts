@@ -4,7 +4,7 @@ import auth from '../middlewares/auth.js';
 
 const router = Router({ mergeParams: true });
 
-router.get('/', auth, orderController.getAllOrders);
-router.post('/', auth, orderController.createOrder);
+router.get('/', orderController.getAllOrders);
+router.post('/', orderController.createOrder);
 
 export default router;
