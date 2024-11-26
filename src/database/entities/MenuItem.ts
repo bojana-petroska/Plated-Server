@@ -16,10 +16,10 @@ export class MenuItem {
   @Column("float")
   price: number;
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string;
 
-  @Column({ type: 'bool', default: true })
+  @Column({ type: 'bool', default: true, nullable: true })
   availability: boolean;
 
   @Column({ nullable: true })

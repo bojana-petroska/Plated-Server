@@ -89,14 +89,16 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   newOrder.restaurant = restaurant;
   newOrder.restaurantId = restaurantId;
   newOrder.totalPrice = totalPrice;
-
-  for (const orderItem of orderItemsEntities) {
-    orderItem.order = newOrder; 
-  }
-
   newOrder.orderItems = orderItemsEntities;
 
   await orderRepository.save(newOrder);
+
+  // for (const orderItem of orderItemsEntities) {
+  //   orderItem.order = newOrder; 
+  // }
+
+  // newOrder.orderItems = orderItemsEntities;
+
 
   const transformedOrderItems: IOrderItem[] = orderItemsEntities.map(item => ({
     id: item.orderItem_id,

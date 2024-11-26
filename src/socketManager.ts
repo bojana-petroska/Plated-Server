@@ -5,11 +5,12 @@ const handleSocketConnection = (io: Server) => {
     console.log(`Client connected: ${socket.id}`);
 
     // Restaurant registration
-    socket.on('register', ({ type, restaurantId }) => {
-        socket.data.type = type;
+    socket.on('register', ({ restaurantId }) => {
+        // socket.data.type = type;
         socket.data.restaurantId = restaurantId;
+        console.log('restaurantId', restaurantId);
   
-        if (type === 'restaurant' && restaurantId) {
+        if (restaurantId) {
           // Join a room specific to the restaurantId
           socket.join(restaurantId);
           console.log(`Restaurant ${restaurantId} joined room.`);

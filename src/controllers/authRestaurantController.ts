@@ -123,7 +123,7 @@ const signIn = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       message: 'User signed in successfully.',
-      data: { restaurant, token, refreshToken },
+      data: { restaurant, token, refreshToken, restaurantId: restaurant.restaurant_id },
     });
   } catch (error) {
     console.error('SignIn error:', error);
