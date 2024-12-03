@@ -40,14 +40,6 @@ const getAllOrdersFromUser = async (
 const getOneOrderFromUser = () => {};
 
 const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
-  // find user
-  // const user = await userRepository.getUser(userId);
-  // find restaurant
-  //const restaurant = await restaurantRepository.getRestaurant(restaurantId);
-  // convert menu items to order items
-  // create order
-  // send notification
-
   const { userId, restaurantId, orderItems } = orderInput;
 
   const user = await userRepository.findOneBy({ user_id: userId });
@@ -61,11 +53,6 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   const orderItemsEntities = await Promise.all(
     orderItems.map(async (item) => {
-      // const menuItemId = item.menuItem.id as number;
-      // const menuItem = await menuItemRepository.getSingleMenuItemFromRestaurant(
-      //   restaurantId,
-      //   menuItemId
-      // );
       const menuItem = await menuItemRepository.findOneBy({
         menuItem_id: item.menuItem.id,
       });
@@ -93,13 +80,6 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   await orderRepository.save(newOrder);
 
-  // for (const orderItem of orderItemsEntities) {
-  //   orderItem.order = newOrder; 
-  // }
-
-  // newOrder.orderItems = orderItemsEntities;
-
-
   const transformedOrderItems: IOrderItem[] = orderItemsEntities.map(item => ({
     id: item.orderItem_id,
     order: newOrder,
@@ -118,18 +98,6 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
     orderItems: transformedOrderItems,
   };
 };
-
-// const updateOrderFromUser = async (order_id: number, user_id: number): Promise<IOrder> => {
-//   // find order
-//   const order = await orderRepository.findOneBy({ order_id: order_id });
-//   const user = await userRepository.findOneBy({ user_id: user_id });
-//   if (!order || !user) throw new Error('User or order not found.');
-
-//   return order;
-
-//   // update order status
-//   // send notification
-// };
 
 const cancelOrderFromUser = () => {};
 
