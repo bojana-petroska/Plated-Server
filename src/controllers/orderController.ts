@@ -19,11 +19,35 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+const getOneOrder = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id) || -1;
+  const orderId = parseInt(req.params.orderId) || -1;
+
+  if (isNaN(userId) || isNaN(orderId)) {
+    res.status(400).send('Invalid userId or orderId.');
+    return;
+  }
+
+  try {
+    const order = await orderRepo.getOneOrderFromUser(userId, orderId);
+    if (!order) {
+      res.status(404).send(`The order with id: ${orderId} is not found.`);
+    }
+    res.status(200).json(order);
+  } catch (err) {
+    res
+      .status(500)
+      .send(
+        `Error fetching the order with id: ${orderId} from the restaurant with id: ${userId}. ${err}`
+      );
+  }
+};
+
 const createOrder = async (req: Request, res: Response) => {
   try {
     const newOrder = await orderRepo.createOrderFromUser(req.body);
     console.log(newOrder);
-    
+
     // Send a notification to the restaurant
     const restaurantId = newOrder.restaurantId;
     io.to(restaurantId.toString()).emit('orderCreated', newOrder);
@@ -36,5 +60,6 @@ const createOrder = async (req: Request, res: Response) => {
 
 export default {
   getAllOrders,
+  getOneOrder,
   createOrder,
 };
