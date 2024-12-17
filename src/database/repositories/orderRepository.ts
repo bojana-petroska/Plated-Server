@@ -15,6 +15,7 @@ const orderRepository = AppDataSource.getRepository(Order);
 const userRepository = AppDataSource.getRepository(User);
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
 const menuItemRepository = AppDataSource.getRepository(MenuItem);
+const orderItemRepository = AppDataSource.getRepository(OrderItem);
 
 const getAllOrdersFromUser = async (
   user_id: number,
@@ -41,16 +42,17 @@ const getAllOrdersFromUser = async (
 };
 
 const getOneOrderFromUser = async (user_id: number, order_id: number) => {
-  // const user = await userRepository.findOneBy({ user_id: user_id });
-  // if (!user) throw new Error('User not found.');
   const order = await orderRepository.findOne({
     where: {
       userId: user_id,
       order_id: order_id,
     },
+    relations: ['orderItems', 'orderItems.menuItem'],
   });
-  console.log('Query Parameters:', { user_id, order_id });
-  console.log('One Single Order:', order);
+
+  if (!order) {
+    throw new Error('Order not found or does not belong to this user.');
+  }
 
   return order;
 };
@@ -117,9 +119,80 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   };
 };
 
-const updateOrderFromUser = () => {};
+const updateOrderFromUser = async (
+  user_id: number,
+  order_id: number,
+  orderItem_id: number,
+  operation: string
+) => {
+  const order = await getOneOrderFromUser(user_id, order_id);
+  if (!order) {
+    throw new Error('Order not found or does not belong to this user.');
+  }
 
-const cancelOrderFromUser = () => {};
+  const targetItem = order.orderItems.find(
+    (item) => item.orderItem_id === orderItem_id
+  );
+  if (!targetItem) {
+    throw new Error('Order item not found in this order.');
+  }
+
+  if (operation === 'increase') {
+    targetItem.quantity += 1;
+  } else if (operation === 'decrease') {
+    targetItem.quantity -= 1;
+    if (targetItem.quantity < 1) {
+      order.orderItems = order.orderItems.filter(
+        (item) => item.orderItem_id !== orderItem_id
+      );
+    }
+  } else {
+    throw new Error('Invalid operation. Use "increase" or "decrease".');
+  }
+
+  let newTotalPrice = 0;
+
+  order.orderItems.forEach((item) => {
+    newTotalPrice += item.quantity * item.menuItem.price;
+  });
+
+  order.totalPrice = Math.round(newTotalPrice) / 100;
+
+  await orderRepository.save(order);
+
+  return {
+    id: order.order_id,
+    userId: order.userId,
+    restaurantId: order.restaurantId,
+    totalPrice: order.totalPrice,
+    status: order.status,
+    createdAt: order.createdAt,
+    updatedAt: new Date(),
+    orderItems: order.orderItems
+      .filter((item) => item.orderItem_id === orderItem_id)
+      .map((item) => ({
+        orderItemId: item.orderItem_id,
+        menuItemName: item.menuItem.name,
+        quantity: item.quantity,
+        price: item.menuItem.price,
+      })),
+  };
+};
+
+const cancelOrderFromUser = async (user_id: number, order_id: number) => {
+  const order = await getOneOrderFromUser(user_id, order_id);
+  if (!order) {
+    throw new Error('Order not found or does not belong to this user.');
+  }
+
+  if (order.status !== 'pending') {
+    throw new Error('Only pending orders can be cancelled.');
+  }
+  await orderItemRepository.remove(order.orderItems);
+  await orderRepository.remove(order);
+
+  return { message: 'Order canceled successfully' };
+};
 
 // Restaurant endpoints
 const getAllOrdersFromRestaurant = () => {};

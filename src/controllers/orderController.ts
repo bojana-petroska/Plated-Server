@@ -30,15 +30,12 @@ const getOneOrder = async (req: Request, res: Response) => {
 
   try {
     const order = await orderRepo.getOneOrderFromUser(userId, orderId);
-    if (!order) {
-      res.status(404).send(`The order with id: ${orderId} is not found.`);
-    }
     res.status(200).json(order);
   } catch (err) {
     res
       .status(500)
       .send(
-        `Error fetching the order with id: ${orderId} from the restaurant with id: ${userId}. ${err}`
+        `Error fetching the order with id: ${orderId} from the user with id: ${userId}. ${err}`
       );
   }
 };
@@ -58,8 +55,66 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const updateOrderFromUser = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id) || -1;
+  const orderId = parseInt(req.params.orderId) || -1;
+  const orderItemId = parseInt(req.params.orderItemId) || 1;
+  const { operation } = req.body;
+
+  if (isNaN(userId) || isNaN(orderId)) {
+    res.status(400).send('Invalid userId or orderId.');
+    return;
+  }
+
+  if (!operation || !['increase', 'decrease'].includes(operation)) {
+    res
+      .status(400)
+      .send('Invalid or missing operation. Use "increase" or "decrease".');
+    return;
+  }
+
+  try {
+    const updatedOrder = await orderRepo.updateOrderFromUser(
+      userId,
+      orderId,
+      orderItemId,
+      operation
+    );
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    res
+      .status(500)
+      .send(
+        `Error updating the order with id: ${orderId} from the user with id: ${userId}. ${err}`
+      );
+  }
+};
+
+const cancelOrderFromUser = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id) || -1;
+  const orderId = parseInt(req.params.orderId) || -1;
+
+  if (isNaN(userId) || isNaN(orderId)) {
+    res.status(400).send('Invalid userId or orderId.');
+    return;
+  }
+
+  try {
+    const canceledOrder = await orderRepo.cancelOrderFromUser(userId, orderId);
+    res.status(200).json(canceledOrder);
+  } catch (err) {
+    res
+     .status(500)
+     .send(
+        `Error canceling the order with id: ${orderId} from the user with id: ${userId}. ${err}`
+      );
+  }
+}
+
 export default {
   getAllOrders,
   getOneOrder,
   createOrder,
+  updateOrderFromUser,
+  cancelOrderFromUser
 };
