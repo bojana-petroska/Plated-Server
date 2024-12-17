@@ -35,7 +35,6 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
 app.use('/auth', authRouter);
-app.use('/orders', orderRouter);
 app.use('/images', imageRouter);
 
 // Error handling middleware
