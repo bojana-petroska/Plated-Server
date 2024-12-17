@@ -22,7 +22,7 @@ export class User {
 
   @Column()
   password: string;
-  
+
   @Column({ nullable: true })
   token: string;
 
@@ -34,6 +34,9 @@ export class User {
 
   @Column()
   phoneNumber: string;
+
+  @Column({ nullable: true })
+  profilePicture: string;
 
   @Column({ type: 'simple-array', nullable: true })
   orderHistory: IOrder[];

@@ -12,6 +12,9 @@ export class OrderItem {
 
   @ManyToOne(() => MenuItem, (menuItem) => menuItem.orderItems)
   menuItem: Relation<MenuItem>;
+
+  // @ManyToOne(() => Cart, (menuItem) => menuItem.orderItems)
+  // menuItem: Relation<MenuItem>;
  
   @Column()
   quantity: number;
