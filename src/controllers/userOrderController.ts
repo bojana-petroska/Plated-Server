@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import orderRepo from '../database/repositories/orderRepository.js';
+import orderRepo from '../database/repositories/userOrderRepository.js';
 import { io } from '../server.js';
 
 const getAllOrders = async (req: Request, res: Response) => {

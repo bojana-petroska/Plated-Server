@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import orderController from '../controllers/orderController.js';
+import orderController from '../controllers/userOrderController.js';
 import auth from '../middlewares/auth.js';
 
 const router = Router({ mergeParams: true });

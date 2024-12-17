@@ -194,23 +194,10 @@ const cancelOrderFromUser = async (user_id: number, order_id: number) => {
   return { message: 'Order canceled successfully' };
 };
 
-// Restaurant endpoints
-const getAllOrdersFromRestaurant = () => {};
-
-const getOneOrderFromRestaurant = () => {};
-
-const updateOrderStatusFromRestaurant = () => {};
-
-const cancelOrderFromRestaurant = () => {};
-
 export default {
   getAllOrdersFromUser,
   getOneOrderFromUser,
   createOrderFromUser,
   updateOrderFromUser,
   cancelOrderFromUser,
-  getAllOrdersFromRestaurant,
-  getOneOrderFromRestaurant,
-  updateOrderStatusFromRestaurant,
-  cancelOrderFromRestaurant,
 };

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userController from '../controllers/userController.js';
-import orderRoutes from '../routes/orderRoutes.js';
+import orderRoutes from './userOrderRoutes.js';
 import validator from '../middlewares/validation.js';
 // import auth from '../middlewares/auth.js';
 import isAuthenticated from '../middlewares/isAuthenticated.js';
