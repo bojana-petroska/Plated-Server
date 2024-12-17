@@ -10,6 +10,8 @@ import restaurantRouter from './routes/restaurantRoutes.js';
 import { AppDataSource } from './database/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
+import orderRouter from './routes/orderRoutes.js'
+import imageRouter from './routes/imageRoutes.js';
 import handleSocketConnection from './socketManager.js';
 
 const app = express();
@@ -25,16 +27,16 @@ const io = new Server(server, {
   },
 });
 
-// const io = new Server(server);
-
 // Middleware setup
-// app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 // Route setup
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
 app.use('/auth', authRouter);
+app.use('/orders', orderRouter);
+app.use('/images', imageRouter);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -41,6 +41,7 @@ export interface IUser {
   password: string;
   address: string;
   phoneNumber: string;
+  profilePicture?: string;
   orderHistory?: IOrder[];
   role?: string;
   token?: string;
