@@ -1,21 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, UpdateDateColumn, OneToMany, Relation } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, OneToMany, Relation, ManyToOne } from 'typeorm';
 import { User } from './User.js';
 import { OrderItem } from './OrderItem.js';
+import { Payment } from './Payment.js';
 
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn()
   cart_id: number;
 
-  @OneToOne(() => User)
-  user: User;
-
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
-  orderItems: Relation<OrderItem[]>;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
+
+  @ManyToOne(() => User, { nullable: false })
+  user: User;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.cart, { cascade: true })
+  orderItems: Relation<OrderItem[]>;
+
+  @OneToOne(() => Payment, { cascade: true })
+  payment: Relation<Payment>
 }

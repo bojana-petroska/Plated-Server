@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Relation,
+  OneToMany,
+} from 'typeorm';
 import { Restaurant } from './Restaurant.js';
 import { OrderItem } from './OrderItem.js';
 
@@ -13,7 +20,7 @@ export class MenuItem {
   @Column()
   description: string;
 
-  @Column("float")
+  @Column('float')
   price: number;
 
   @Column({ nullable: true })
@@ -25,7 +32,7 @@ export class MenuItem {
   @Column({ nullable: true })
   category: string;
 
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.menu)
+  @ManyToOne(() => Restaurant, { nullable: false })
   restaurant: Relation<Restaurant>;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.menuItem)

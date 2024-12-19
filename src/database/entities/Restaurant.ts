@@ -1,6 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 import { MenuItem } from './MenuItem.js';
 import { Order } from './Order.js';
+import { Courier } from './Courier.js';
+import { Notification } from './Notification.js'
 
 @Entity()
 export class Restaurant {
@@ -25,24 +33,29 @@ export class Restaurant {
   @Column({ nullable: true })
   phoneNumber: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   email: string;
 
   @Column({ nullable: true })
   openingHours: string;
 
-  @Column({ type: 'int', nullable: true  })
+  @Column({ type: 'int', nullable: true })
   deliveryRadius: number;
-
-  @Column({ nullable: true })
-  role: string;
-
-  @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant)
-  menu: Relation<MenuItem[]>;
 
   @Column({ type: 'bool', default: true, nullable: true })
   isOpen: boolean;
 
+  @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant, { cascade: true })
+  menu: Relation<MenuItem[]>;
+
   @OneToMany(() => Order, (order) => order.restaurant, { cascade: true })
   orders: Relation<Order[]>;
+
+  @OneToMany(() => Courier, (courier) => courier.restaurant, { cascade: true })
+  couriers: Relation<Courier[]>;
+
+  @OneToMany(() => Notification, (notification) => notification.restaurant, {
+    cascade: true,
+  })
+  notifications: Relation<Notification[]>;
 }

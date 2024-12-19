@@ -18,20 +18,11 @@ export class Order {
   @PrimaryGeneratedColumn()
   order_id: number;
 
-  @Column()
-  userId: number;
+  // @Column()
+  // userId: number;
 
-  @ManyToOne(() => User)
-  user: Relation<User>;
-
-  @Column()
-  restaurantId: number;
-
-  @ManyToOne(() => Restaurant)
-  restaurant: Relation<Restaurant>;
-
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
-  orderItems: Relation<OrderItem[]>;
+  // @Column()
+  // restaurantId: number;
 
   @Column({ type: 'float' })
   totalPrice: number;
@@ -48,4 +39,13 @@ export class Order {
 
   @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
+
+  @ManyToOne(() => User, { nullable: false })
+  user: Relation<User>;
+
+  @ManyToOne(() => Restaurant, { nullable: false })
+  restaurant: Relation<Restaurant>;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
+  orderItems: Relation<OrderItem[]>;
 }

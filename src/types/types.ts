@@ -91,3 +91,8 @@ export interface IOrderItem {
   menuItem: IMenuItem;
   quantity: number;
 }
+
+export enum Availability {
+  available = 'available',
+  unavailable = 'unavailable'
+}
