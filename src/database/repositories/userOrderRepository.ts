@@ -28,7 +28,7 @@ const getAllOrdersFromUser = async (
   const offset = (page - 1) * limit;
 
   const [orders, total] = await orderRepository.findAndCount({
-    where: { userId: user_id },
+    where: { user: { user_id } },
     skip: offset,
     take: limit,
   });
@@ -44,7 +44,7 @@ const getAllOrdersFromUser = async (
 const getOneOrderFromUser = async (user_id: number, order_id: number) => {
   const order = await orderRepository.findOne({
     where: {
-      userId: user_id,
+      user: { user_id },
       order_id: order_id,
     },
     relations: ['orderItems', 'orderItems.menuItem'],
@@ -58,9 +58,9 @@ const getOneOrderFromUser = async (user_id: number, order_id: number) => {
 };
 
 const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
-  const { userId, restaurantId, orderItems } = orderInput;
+  const { orderItems } = orderInput;
 
-  const user = await userRepository.findOneBy({ user_id: userId });
+  const user = await userRepository.findOneBy({ user: user_id });
   const restaurant = await restaurantRepository.findOneBy({
     restaurant_id: restaurantId,
   });
@@ -90,9 +90,7 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   const newOrder = new Order();
   newOrder.user = user;
-  newOrder.userId = userId;
   newOrder.restaurant = restaurant;
-  newOrder.restaurantId = restaurantId;
   newOrder.totalPrice = totalPrice;
   newOrder.orderItems = orderItemsEntities;
 
@@ -109,8 +107,8 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   return {
     id: newOrder.order_id,
-    userId: newOrder.userId,
-    restaurantId: newOrder.restaurantId,
+    userId: newOrder.user.user_id,
+    restaurantId: newOrder.restaurant.restaurant_id,
     totalPrice: newOrder.totalPrice,
     status: newOrder.status,
     createdAt: newOrder.createdAt,
@@ -162,8 +160,8 @@ const updateOrderFromUser = async (
 
   return {
     id: order.order_id,
-    userId: order.userId,
-    restaurantId: order.restaurantId,
+    userId: order.user.user_id,
+    restaurantId: order.restaurant.restaurant_id,
     totalPrice: order.totalPrice,
     status: order.status,
     createdAt: order.createdAt,

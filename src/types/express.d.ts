@@ -4,8 +4,9 @@ declare global {
   namespace Express {
     interface Request {
       payload?: {
-        userName: string;
-        id: string | undefined;
+        user?: User;
+        // userName: string;
+        // id: string | undefined;
       };
     }
   }

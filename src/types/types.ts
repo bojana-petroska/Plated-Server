@@ -61,8 +61,8 @@ export enum OrderStatus {
 
 export interface IOrder {
   id?: number;
-  userId: number;
-  restaurantId: number;
+  // userId: number;
+  // restaurantId: number;
   orderItems: IOrderItem[];
   totalPrice: number;
   status: OrderStatus;
