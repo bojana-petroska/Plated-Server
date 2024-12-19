@@ -5,9 +5,14 @@ import {
   CreateDateColumn,
   OneToMany,
   Relation,
+  UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { Order } from './Order.js';
 import { IOrder } from '../../types/types.js';
+import { Payment } from './Payment.js';
+import { Notification } from './Notification.js'
+import { Cart } from './Cart.js';
 
 @Entity()
 export class User {
@@ -22,7 +27,7 @@ export class User {
 
   @Column()
   password: string;
-  
+
   @Column({ nullable: true })
   token: string;
 
@@ -35,15 +40,29 @@ export class User {
   @Column()
   phoneNumber: string;
 
-  @Column({ type: 'simple-array', nullable: true })
-  orderHistory: IOrder[];
+  @Column({ nullable: true })
+  profilePicture: string;
 
   @Column({ nullable: true })
   role: string;
 
-  @CreateDateColumn({ type: 'timestamp', nullable: true })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @OneToMany(() => Order, (order) => order.user)
+  @UpdateDateColumn({ nullable: true })
+  updatedAt: Date;
+
+  @OneToMany(() => Order, (order) => order.user, { cascade: true })
   orders: Relation<Order[]>;
+
+  @OneToMany(() => Payment, (payment) => payment.user, { cascade: true })
+  payments: Relation<Payment[]>;
+
+  @OneToMany(() => Notification, (notification) => notification.user, {
+    cascade: true,
+  })
+  notifications: Relation<Notification[]>;
+
+  @OneToMany(() => Cart, (cart) => cart.user, { cascade: true })
+  carts: Relation<Cart[]>;
 }

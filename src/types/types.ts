@@ -41,6 +41,7 @@ export interface IUser {
   password: string;
   address: string;
   phoneNumber: string;
+  profilePicture?: string;
   orderHistory?: IOrder[];
   role?: string;
   token?: string;
@@ -89,4 +90,9 @@ export interface IOrderItem {
   order: IOrder;
   menuItem: IMenuItem;
   quantity: number;
+}
+
+export enum Availability {
+  available = 'available',
+  unavailable = 'unavailable'
 }

@@ -14,6 +14,4 @@ router.post('/', validator, userController.createUser);
 router.put('/:id', isAuthenticated, userController.updateUser);
 router.delete('/:id', isAuthenticated, userController.deleteUser);
 
-router.use('/:id/orders', orderRoutes);
-
 export default router;

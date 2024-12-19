@@ -2,7 +2,7 @@ import { Router } from 'express';
 import orderController from '../controllers/userOrderController.js';
 import auth from '../middlewares/auth.js';
 
-const router = Router({ mergeParams: true });
+const router = Router();
 
 router.get('/', orderController.getAllOrders);
 router.get('/:orderId', orderController.getOneOrder);
