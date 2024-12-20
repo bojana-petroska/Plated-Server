@@ -9,7 +9,6 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Order } from './Order.js';
-import { IOrder } from '../../types/types.js';
 import { Payment } from './Payment.js';
 import { Notification } from './Notification.js'
 import { Cart } from './Cart.js';
@@ -25,7 +24,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ length: 255, nullable: true, })
   password: string;
 
   @Column({ nullable: true })

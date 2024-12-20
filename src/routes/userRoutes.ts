@@ -1,17 +1,16 @@
 import { Router } from 'express';
 import userController from '../controllers/userController.js';
-import orderRoutes from './userOrderRoutes.js';
-import validator from '../middlewares/validation.js';
-// import auth from '../middlewares/auth.js';
-import isAuthenticated from '../middlewares/isAuthenticated.js';
+import { validateRequest } from '../middlewares/validateRequest.js'
+import { userValidationSchema } from '../middlewares/userValidationSchema.js'
+import { userAuth } from '../middlewares/auth.js';
 
 const router = Router();
 
 router.get('/', userController.getAllUsers);
-router.get('/profile', isAuthenticated, userController.getUserProfileData);
-router.get('/:id', isAuthenticated, userController.getUser);
-router.post('/', validator, userController.createUser);
-router.put('/:id', isAuthenticated, userController.updateUser);
-router.delete('/:id', isAuthenticated, userController.deleteUser);
+router.get('/profile', userAuth, userController.getUserProfileData);
+router.get('/:id', userAuth, userController.getUser);
+router.post('/', validateRequest(userValidationSchema), userAuth, userController.createUser);
+router.put('/:id', userAuth, userController.updateUser);
+router.delete('/:id', userAuth, userController.deleteUser);
 
 export default router;

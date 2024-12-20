@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { IRestaurant } from '../types/types.js';
 import { AppDataSource } from '../database/ormconfig.js';
-import restaurantRepo from '../database/repositories/restaurantRepository.js';
+import { IRestaurant } from '../types/types.js';
 import { Restaurant } from '../database/entities/Restaurant.js';
+import restaurantRepo from '../database/repositories/restaurantRepository.js';
 
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
 
@@ -21,7 +21,7 @@ const generateAccessToken = ({
   JWT_SECRET: string;
 }) => {
   const token = jwt.sign(
-    { name: restaurant.name, id: restaurant.id },
+    { name: restaurant.name, id: restaurant.restaurant_id },
     JWT_SECRET,
     {
       expiresIn: '1h',
@@ -38,7 +38,7 @@ const generateRefreshToken = ({
   JWT_REFRESH_SECRET: string;
 }) => {
   const refreshToken = jwt.sign(
-    { name: restaurant.name, id: restaurant.id },
+    { name: restaurant.name, id: restaurant.restaurant_id },
     JWT_REFRESH_SECRET,
     {
       expiresIn: '7d',
@@ -63,20 +63,15 @@ const signUp = async (req: Request, res: Response) => {
     });
     console.log('STORED PASSWORD', restaurant.password);
 
-    // await userRepository.save(user);
-
     res.status(201).send({
       message: 'Restaurant created successfully.',
-      data: { restaurant },
+      name: restaurant.name,
     });
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === 'Restaurant already exists.'
-    ) {
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message === 'Restaurant already exists.') {
       res.status(400).send({ message: 'Restaurant already exists.' });
     } else {
-      res.status(400).send({ message: 'Restaurant not created.', error });
+      res.status(400).send({ message: 'Restaurant not created.', err });
     }
   }
 };
@@ -123,57 +118,61 @@ const signIn = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       message: 'User signed in successfully.',
-      data: { restaurant, token, refreshToken, restaurantId: restaurant.restaurant_id },
+      data: {
+        restaurant,
+        token,
+        refreshToken,
+        restaurantId: restaurant.restaurant_id,
+      },
     });
-  } catch (error) {
-    console.error('SignIn error:', error);
-    res.status(500).send(error);
+  } catch (err: unknown) {
+    res.status(500).send({ message: 'SignIn error:' });
   }
 };
 
 const handleRefreshTokenGeneration = async (req: Request, res: Response) => {
-    const refreshToken: string = req.body.refreshToken;
-    if (!refreshToken) {
-      res.status(401).send('Refresh Token required');
+  const refreshToken: string = req.body.refreshToken;
+  if (!refreshToken) {
+    res.status(401).send('Refresh Token required');
+    return;
+  }
+  try {
+    const restaurant = await restaurantRepository.findOneBy({ refreshToken });
+    console.log(restaurant);
+
+    if (!restaurant) {
+      res.status(403).send('Invalid Refresh Token');
       return;
     }
-    try {
-      const restaurant = await restaurantRepository.findOneBy({ refreshToken });
-      console.log(restaurant);
-  
-      if (!restaurant) {
+
+    if (!JWT_REFRESH_SECRET) {
+      res.status(500).send('Refresh secret Not Found');
+      return;
+    }
+
+    jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err, decode) => {
+      if (err) {
         res.status(403).send('Invalid Refresh Token');
         return;
       }
-  
-      if (!JWT_REFRESH_SECRET) {
-        res.status(500).send('Refresh secret Not Found');
+
+      if (!JWT_SECRET) {
+        res.status(500).send('Secret Not Found');
         return;
       }
-  
-      jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err, decode) => {
-        if (err) {
-          res.status(403).send('Invalid Refresh Token');
-          return;
-        }
-  
-        if (!JWT_SECRET) {
-          res.status(500).send('Secret Not Found');
-          return;
-        }
-  
-        const token = generateAccessToken({ restaurant, JWT_SECRET });
-        res.status(200).send({ token });
-      });
-    } catch (error) {
-      res.status(500).send('Server Error');
-    }
-  };
+
+      const token = generateAccessToken({ restaurant, JWT_SECRET });
+      res.status(200).send({ token });
+    });
+  } catch (err: unknown) {
+    res.status(500).send({ message: 'Server Error' });
+  }
+};
 
 export default {
   signUp,
   signIn,
   generateAccessToken,
   generateRefreshToken,
-  handleRefreshTokenGeneration
+  handleRefreshTokenGeneration,
 };

@@ -33,7 +33,7 @@ export class Restaurant {
   @Column({ nullable: true })
   phoneNumber: string;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })

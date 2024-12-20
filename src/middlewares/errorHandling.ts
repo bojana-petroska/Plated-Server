@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 
-// middlewares/errorHandler.js
 const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     console.error(err);
   

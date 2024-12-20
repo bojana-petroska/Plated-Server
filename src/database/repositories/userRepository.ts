@@ -2,7 +2,7 @@ import { IUser, PaginatedResults, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
 import { AppDataSource } from '../ormconfig.js';
 import bcrypt from 'bcrypt';
-import authController from '../../controllers/authController.js';
+import authController from '../../controllers/authUserController.js';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -33,72 +33,23 @@ const getUser = async (user_id: number): Promise<IUser> => {
   return user;
 };
 
-const getUserProfileData = async (userName: string | undefined): Promise<IUser> => {
-  const user = await userRepository.findOneBy({ userName });
+const getUserProfileData = async (user_id: number | undefined): Promise<IUser> => {
+  const user = await userRepository.findOneBy({ user_id: user_id });
   if (!user) {
-    throw new Error(`User with id: ${userName} not found.`);
+    throw new Error(`User with id: ${user_id} not found.`);
   }
   return user;
-}
+};
 
-// const createUser = async ({
-//   userName,
-//   email,
-//   password,
-// }: UserInput): Promise<{
-//   user: IUser;
-//   token: string;
-//   refreshToken: string;
-// }> => {
-//   const existingUser = await userRepository.findOne({
-//     where: [{ userName }, { email }],
-//   });
-//   if (existingUser) {
-//     throw new Error(
-//       'Username or email already exists. Please choose a different one.'
-//     );
-//   }
-//   console.log(JWT_SECRET);
-//   const hashedPassword = await bcrypt.hash(password, 10);
+const createUser = async ({
+  userName,
+  email,
+  password,
+}: UserInput): Promise<IUser> => {
+  const existingUser = await userRepository.findOne({
+    where: [{ userName }, { email }],
+  });
 
-//   const newUser = userRepository.create({
-//     userName,
-//     email,
-//     password: hashedPassword,
-//     address: '',
-//     phoneNumber: '',
-//     createdAt: new Date(),
-//   });
-
-//   const savedUser = await userRepository.save(newUser);
-
-//   // Generate tokens
-//   if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
-//     throw new Error(
-//       'Missing JWT secrets. Please set JWT_SECRET and JWT_REFRESH_SECRET environment variables.'
-//     );
-//   }
-//   const token = authController.generateAccessToken({
-//     user: savedUser,
-//     JWT_SECRET,
-//   });
-//   console.log(token);
-//   const refreshToken = authController.generateRefreshToken({
-//     user: savedUser,
-//     JWT_REFRESH_SECRET,
-//   });
-
-//   // Save refresh token to user record
-//   savedUser.token = token;
-//   savedUser.refreshToken = refreshToken;
-//   await userRepository.save(savedUser);
-
-//   return { user: savedUser, token, refreshToken };
-// };
-
-const createUser = async ({ userName, email, password }: UserInput): Promise<IUser> => {
-  const existingUser = await userRepository.findOne({ where: [{ userName }, { email }] });
-  
   if (existingUser) {
     throw new Error('Username or email already exists.');
   }
@@ -117,8 +68,9 @@ const createUser = async ({ userName, email, password }: UserInput): Promise<IUs
     createdAt: new Date(),
   });
 
-  console.log(newUser)
-  return await userRepository.save(newUser);
+  console.log(newUser);
+  const newCreatedUser = await userRepository.save(newUser);
+  return newCreatedUser;
 };
 
 const updateUser = async (

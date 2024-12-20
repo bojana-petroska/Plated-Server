@@ -24,7 +24,6 @@ const getAllRestaurants = async (
       'email',
       'openingHours',
       'deliveryRadius',
-      'role',
       'isOpen',
     ],
     skip: offset,
@@ -72,7 +71,6 @@ const createRestaurant = async ({
     email:'',
     openingHours: '',
     deliveryRadius: 0,
-    role: '',
     menu: [],
     isOpen: false,
   });

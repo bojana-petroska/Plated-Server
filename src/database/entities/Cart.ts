@@ -15,7 +15,7 @@ export class Cart {
   updatedAt: Date;
 
   @ManyToOne(() => User, { nullable: false })
-  user: User;
+  user: Relation<User>;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.cart, { cascade: true })
   orderItems: Relation<OrderItem[]>;

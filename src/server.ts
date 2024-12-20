@@ -10,7 +10,6 @@ import restaurantRouter from './routes/restaurantRoutes.js';
 import { AppDataSource } from './database/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
-import orderRouter from './routes/orderRoutes.js'
 import imageRouter from './routes/imageRoutes.js';
 import handleSocketConnection from './socketManager.js';
 

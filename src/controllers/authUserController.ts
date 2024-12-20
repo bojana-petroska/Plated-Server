@@ -1,14 +1,12 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { AppDataSource } from '../database/ormconfig.js';
 import { IUser } from '../types/types.js';
 import { User } from '../database/entities/User.js';
-import { AppDataSource } from '../database/ormconfig.js';
 import userRepo from '../database/repositories/userRepository.js';
 
 const userRepository = AppDataSource.getRepository(User);
-
-// const JWT_SECRET = process.env.JWT_SECRET;
 // const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 const JWT_SECRET =
@@ -23,7 +21,13 @@ const generateAccessToken = ({
   user: IUser;
   JWT_SECRET: string;
 }) => {
-  const token = jwt.sign({ userName: user.userName, id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign(
+    { user_id: user.user_id },
+    JWT_SECRET,
+    {
+      expiresIn: '1h',
+    }
+  );
   return token;
 };
 
@@ -34,31 +38,16 @@ const generateRefreshToken = ({
   user: IUser;
   JWT_REFRESH_SECRET: string;
 }) => {
-  const refreshToken = jwt.sign({ userName: user.userName, id: user.id }, JWT_REFRESH_SECRET, {
-    expiresIn: '7d',
-  });
+  const refreshToken = jwt.sign(
+    { user_id: user.user_id },
+    JWT_REFRESH_SECRET,
+    {
+      expiresIn: '7d',
+    }
+  );
   return refreshToken;
 };
 
-// const signUp = async (req: Request, res: Response) => {
-//   const { userName, email, password } = req.body;
-//   console.log(JWT_SECRET);
-//   try {
-//     if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
-//       console.log('JWT Secrets Not Found');
-//       res.status(500).send('JWT Secret Not Found');
-//       return;
-//     }
-//     const { user, token, refreshToken } = await userRepo.createUser({ userName, email, password });
-
-//     res.status(201).send({
-//       message: 'User created successfully.',
-//       data: { user, token, refreshToken },
-//     });
-//   } catch (error) {
-//     res.status(400).send(error);
-//   }
-// }
 const signUp = async (req: Request, res: Response) => {
   const { userName, email, password } = req.body;
   console.log(JWT_SECRET);
@@ -72,17 +61,18 @@ const signUp = async (req: Request, res: Response) => {
     const user = await userRepo.createUser({ userName, email, password });
     console.log('STORED PASSWORD', user.password);
 
-    // await userRepository.save(user);
-
     res.status(201).send({
       message: 'User created successfully.',
-      data: { user },
+      userName: user.userName,
     });
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Username or email already exists.') {
+  } catch (err: unknown) {
+    if (
+      err instanceof Error &&
+      err.message === 'Username or email already exists.'
+    ) {
       res.status(400).send({ message: 'Username or email already exists.' });
     } else {
-      res.status(400).send({ message: 'User not created.', error });
+      res.status(400).send({ message: 'User not created.', err });
     }
   }
 };
@@ -93,6 +83,7 @@ const signIn = async (req: Request, res: Response) => {
   console.log('INPUT PASSWORD:', password);
   try {
     const user = await userRepository.findOneBy({ userName });
+    console.log('FOUND USER:', user)
     if (!user) {
       res.status(404).send('User Not Found!');
       return;
@@ -126,36 +117,12 @@ const signIn = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       message: 'User signed in successfully.',
-      data: { user, token, refreshToken },
+      data: { userName, token },
     });
-  } catch (error) {
-    console.error('SignIn error:', error);
-    res.status(500).send(error);
+  } catch (err: unknown) {
+    res.status(500).send({ message: 'SignIn error:' });
   }
 };
-
-// const verify = async (req: Request, res: Response) => {
-//   const { userName } = req.body;
-//   try {
-//     if (!userName) {
-//       res.status(401).json({ message: 'Unauthorized' });
-//       return;
-//     }
-
-//     const user = await userRepository.findOneBy({ userName });
-//     if (!user) {
-//       res.status(404).json({ message: 'User not found' });
-//       return;
-//     }
-
-//     res.status(200).send({
-//       message: 'User authenticated',
-//       data: { user },
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// };
 
 const handleRefreshTokenGeneration = async (req: Request, res: Response) => {
   const refreshToken: string = req.body.refreshToken;
@@ -191,8 +158,8 @@ const handleRefreshTokenGeneration = async (req: Request, res: Response) => {
       const token = generateAccessToken({ user, JWT_SECRET });
       res.status(200).send({ token });
     });
-  } catch (error) {
-    res.status(500).send('Server Error');
+  } catch (err: unknown) {
+    res.status(500).send({ message: 'Server Error' });
   }
 };
 
@@ -201,6 +168,5 @@ export default {
   generateRefreshToken,
   signUp,
   signIn,
-  // verify,
   handleRefreshTokenGeneration,
 };

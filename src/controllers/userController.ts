@@ -13,26 +13,24 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-const getUser = async (req: Request, res: Response) => {
-  const userId = parseInt(req.params.id);
+const getUser = async (req: Request & { payload?: any }, res: Response) => {
+  const user_id = req?.payload.user.user_id;
   try {
-    const user = await userRepo.getUser(userId);
-    console.log(user);
+    const user = await userRepo.getUser(user_id);
     res.status(200).json(user);
   } catch (err) {
     res
       .status(404)
-      .send(`The user with id: ${userId} is not found. Error: ${err}`);
+      .send(`The user with id: ${user_id} is not found. Error: ${err}`);
   }
 };
 
 const getUserProfileData = async (req: Request & { payload?: any }, res: Response) => {
-  const userName = req.payload?.userName;
-  console.log('REQ.PAYLOAD.USERNAME:', userName);
-  console.log('REQ.PAYLOAD:', req.payload);
+  const user_id = req?.payload.user_id;
+  console.log('REQ.USER_ID:', user_id);
 
   try {
-    const foundUser = await userRepo.getUserProfileData(userName)
+    const foundUser = await userRepo.getUserProfileData(user_id)
 
     if (!foundUser) {
       res.status(404).json({ message: 'User not found.' });
