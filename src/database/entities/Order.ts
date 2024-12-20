@@ -18,12 +18,6 @@ export class Order {
   @PrimaryGeneratedColumn()
   order_id: number;
 
-  // @Column()
-  // userId: number;
-
-  // @Column()
-  // restaurantId: number;
-
   @Column({ type: 'float' })
   totalPrice: number;
 

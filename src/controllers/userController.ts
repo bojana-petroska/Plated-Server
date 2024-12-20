@@ -6,9 +6,8 @@ const getAllUsers = async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string) || 10;
   try {
     const users = await userRepo.getUsers(page, limit);
-    // console.log(users);
     res.status(200).json(users);
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).send(err);
   }
 };
@@ -18,7 +17,7 @@ const getUser = async (req: Request & { payload?: any }, res: Response) => {
   try {
     const user = await userRepo.getUser(user_id);
     res.status(200).json(user);
-  } catch (err) {
+  } catch (err: unknown) {
     res
       .status(404)
       .send(`The user with id: ${user_id} is not found. Error: ${err}`);

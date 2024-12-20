@@ -11,6 +11,7 @@ import { AppDataSource } from './database/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
+import orderRouter from './routes/orderRoutes.js'
 import handleSocketConnection from './socketManager.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(express.json());
 // Route setup
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
+app.use('/orders', orderRouter);
 app.use('/auth', authRouter);
 app.use('/images', imageRouter);
 

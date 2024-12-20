@@ -19,7 +19,7 @@ export interface IRestaurant {
   isOpen?: boolean;
 }
 
-export type RestaurantInput = Omit<IRestaurant, 'id' | 'menu'>;
+export type RestaurantInput = Omit<IRestaurant, 'restaurant_id' | 'menu'>;
 
 export interface IMenuItem {
   menuItem_id?: number;
@@ -32,7 +32,7 @@ export interface IMenuItem {
   restaurantId?: number;
 }
 
-export type MenuItemInput = Omit<IMenuItem, 'id'>;
+export type MenuItemInput = Omit<IMenuItem, 'menuItem_id'>;
 
 export interface IUser {
   user_id?: number;
@@ -61,19 +61,21 @@ export enum OrderStatus {
 
 export interface IOrder {
   order_id?: number;
-  // userId: number;
-  // restaurantId: number;
   orderItems: IOrderItem[];
   totalPrice: number;
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
+  restaurant?: {
+    restaurant_id: number;
+    name: string;
+  };
 }
 
 export type OrderInput = Omit<
   IOrder,
-  'id' | 'status' | 'createdAt' | 'updatedAt'
->;
+  'order_id' | 'status' | 'createdAt' | 'updatedAt'
+> & { restaurant_id: number };
 
 export interface ICart {
   cart_id?: number;
@@ -83,16 +85,16 @@ export interface ICart {
   updatedAt?: Date;
 }
 
-export type CartInput = Omit<ICart, 'id' | 'createdAt' | 'updatedAt'>;
+export type CartInput = Omit<ICart, 'cart_id' | 'createdAt' | 'updatedAt'>;
 
 export interface IOrderItem {
   orderItem_id?: number;
-  order: IOrder;
+  order?: IOrder;
   menuItem: IMenuItem;
   quantity: number;
 }
 
 export enum Availability {
   available = 'available',
-  unavailable = 'unavailable'
+  unavailable = 'unavailable',
 }

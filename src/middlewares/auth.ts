@@ -26,19 +26,16 @@ export const userAuth = async (
     const decoded = jwt.verify(token, JWT_SECRET!) as {
       user_id: number;
     };
-    console.log('Decoded Token:', decoded);
     const user = await userRepository.findOneBy({ user_id: decoded.user_id });
     if (!user) {
       res.status(401).send({ message: 'Invalid token: User not found' });
       return;
     }
-    console.log('FOUND USER:', user);
     req.payload = {
       user_id: user.user_id,
       userName: user.userName,
       email: user.email,
     };
-    // req.payload = { user };
     console.log('USER FROM REQ', req.user);
     next();
   } catch (err: unknown) {
@@ -47,7 +44,7 @@ export const userAuth = async (
 };
 
 export const restaurantAuth = async (
-  req: Request & { restaurant?: Restaurant },
+  req: Request & { restaurant?: Restaurant; payload?: any },
   res: Response,
   next: NextFunction
 ) => {
@@ -67,7 +64,11 @@ export const restaurantAuth = async (
       res.status(401).send({ message: 'Invalid token: User not found' });
       return;
     }
-    req.restaurant = restaurant;
+    req.payload = {
+      restaurant_id: restaurant.restaurant_id,
+      name: restaurant.name,
+      isOpen: restaurant.isOpen,
+    };
     next();
   } catch (err: unknown) {
     res.status(401).send({ message: 'Unauthorized', err });

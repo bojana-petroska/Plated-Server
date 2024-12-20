@@ -4,14 +4,17 @@ import { userAuth } from '../middlewares/auth.js';
 
 const router = Router();
 
-router.get('/', orderController.getAllOrders);
-router.get('/:orderId', orderController.getOneOrder);
-router.post('/', orderController.createOrder);
+// User Order Routes
+router.get('/', userAuth, orderController.getAllOrders);
+router.get('/:orderId', userAuth, orderController.getOneOrder);
+router.post('/', userAuth, orderController.createOrder);
 router.put(
   '/:orderId/:orderItemId',
   userAuth,
   orderController.updateOrderFromUser
 );
 router.delete('/:orderId/', userAuth, orderController.cancelOrderFromUser);
+
+// Restaurant Order Routes
 
 export default router;

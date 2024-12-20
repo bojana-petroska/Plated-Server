@@ -22,7 +22,7 @@ const getAllOrdersFromUser = async (
   page: number,
   limit: number
 ): Promise<PaginatedResults<IOrder>> => {
-  const user = await userRepository.findOneBy({ user_id: user_id });
+  const user = await userRepository.findOneBy({ user_id });
   if (!user) throw new Error('User not found.');
 
   const offset = (page - 1) * limit;
@@ -57,12 +57,12 @@ const getOneOrderFromUser = async (user_id: number, order_id: number) => {
   return order;
 };
 
-const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
-  const { orderItems } = orderInput;
+const createOrderFromUser = async (orderInput: OrderInput, user_id: number): Promise<IOrder> => {
+  const { restaurant_id, orderItems } = orderInput;
 
-  const user = await userRepository.findOneBy({ user: user_id });
+  const user = await userRepository.findOneBy({ user_id });
   const restaurant = await restaurantRepository.findOneBy({
-    restaurant_id: restaurantId,
+    restaurant_id: restaurant_id,
   });
 
   if (!user || !restaurant) throw new Error(`User or restaurant not found.`);
@@ -72,7 +72,7 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
   const orderItemsEntities = await Promise.all(
     orderItems.map(async (item) => {
       const menuItem = await menuItemRepository.findOneBy({
-        menuItem_id: item.menuItem.id,
+        menuItem_id: item.menuItem.menuItem_id,
       });
 
       if (!menuItem)
@@ -96,19 +96,16 @@ const createOrderFromUser = async (orderInput: OrderInput): Promise<IOrder> => {
 
   await orderRepository.save(newOrder);
 
-  const transformedOrderItems: IOrderItem[] = orderItemsEntities.map(
+  const transformedOrderItems: Omit<IOrderItem, 'order'>[] = orderItemsEntities.map(
     (item) => ({
-      id: item.orderItem_id,
-      order: newOrder,
+      orderItem_id: item.orderItem_id,
       menuItem: item.menuItem,
       quantity: item.quantity,
     })
   );
 
   return {
-    id: newOrder.order_id,
-    userId: newOrder.user.user_id,
-    restaurantId: newOrder.restaurant.restaurant_id,
+    order_id: newOrder.order_id,
     totalPrice: newOrder.totalPrice,
     status: newOrder.status,
     createdAt: newOrder.createdAt,

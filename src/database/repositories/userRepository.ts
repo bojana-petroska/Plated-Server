@@ -33,8 +33,13 @@ const getUser = async (user_id: number): Promise<IUser> => {
   return user;
 };
 
-const getUserProfileData = async (user_id: number | undefined): Promise<IUser> => {
-  const user = await userRepository.findOneBy({ user_id: user_id });
+const getUserProfileData = async (
+  user_id: number | undefined
+): Promise<IUser> => {
+  const user = await userRepository.findOne({
+    where: { user_id },
+    select: ['user_id', 'userName', 'email', 'address', 'phoneNumber', 'profilePicture', 'orders', 'notifications'],
+  });
   if (!user) {
     throw new Error(`User with id: ${user_id} not found.`);
   }
