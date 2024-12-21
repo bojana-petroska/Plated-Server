@@ -46,6 +46,10 @@ const getRestaurant = async (restaurant_id: number): Promise<IRestaurant> => {
   return restaurant;
 };
 
+const getOwnRestaurant = async (restaurant_id: number): Promise<IRestaurant | null> => {
+  return await restaurantRepository.findOneBy({ restaurant_id: restaurant_id });
+};
+
 const createRestaurant = async ({
   name,
   password,
@@ -107,6 +111,7 @@ const deleteOneRestaurant = async (
 export default {
   getAllRestaurants,
   getRestaurant,
+  getOwnRestaurant,
   createRestaurant,
   updateRestaurant,
   deleteOneRestaurant,

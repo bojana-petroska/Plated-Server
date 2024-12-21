@@ -27,6 +27,32 @@ const getRestaurant = async (req: Request, res: Response) => {
   }
 };
 
+const getOwnRestaurant = async (
+  req: Request & { payload?: any },
+  res: Response
+) => {
+  const restaurant_id = req.payload?.restaurant_id;
+  console.log('REST_ID:', restaurant_id)
+
+  if (!restaurant_id) {
+    res.status(400).send('Restaurant ID not found in request payload.');
+    return;
+  }
+
+  try {
+    const restaurant = await restaurantRepo.getRestaurant(restaurant_id);
+
+    if (!restaurant) {
+      res.status(404).send(`Restaurant with id ${restaurant_id} not found.`);
+      return;
+    }
+
+    res.status(200).json(restaurant);
+  } catch (err: unknown) {
+    res.status(500).send(`Error retrieving restaurant: ${err}`);
+  }
+};
+
 const createRestaurant = async (req: Request, res: Response) => {
   try {
     const newRestaurant = await restaurantRepo.createRestaurant(req.body);
@@ -58,8 +84,11 @@ const updateRestaurant = async (
   }
 };
 
-const deleteRestaurant = async (req: Request & { payload?: any }, res: Response) => {
-  const restaurant_id = req.payload?.restaurant_id;;
+const deleteRestaurant = async (
+  req: Request & { payload?: any },
+  res: Response
+) => {
+  const restaurant_id = req.payload?.restaurant_id;
   try {
     const deletedRestaurant = await restaurantRepo.deleteOneRestaurant(
       restaurant_id
@@ -82,6 +111,7 @@ const deleteRestaurant = async (req: Request & { payload?: any }, res: Response)
 export default {
   getAllRestaurants,
   getRestaurant,
+  getOwnRestaurant,
   createRestaurant,
   updateRestaurant,
   deleteRestaurant,

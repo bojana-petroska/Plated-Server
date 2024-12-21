@@ -16,7 +16,7 @@ export const userAuth = async (
   next: NextFunction
 ) => {
   const token = req.headers['authorization']?.split(' ')[1];
-  console.log('Received Token:', token);
+  // console.log('Received Token:', token);
   if (!token) {
     res.status(401).send('No token provided');
     return;
@@ -49,6 +49,8 @@ export const restaurantAuth = async (
   next: NextFunction
 ) => {
   const token = req.headers['authorization']?.split(' ')[1];
+  console.log("Authorization Header:", req.headers['authorization']);
+  console.log('Received Token Restaurant:', token);
   if (!token) {
     res.status(401).send('No token provided');
     return;
@@ -57,6 +59,7 @@ export const restaurantAuth = async (
     const decoded = jwt.verify(token, JWT_SECRET!) as {
       restaurant_id: number;
     };
+    console.log("Decoded Token:", decoded);
     const restaurant = await restaurantRepository.findOneBy({
       restaurant_id: decoded.restaurant_id,
     });

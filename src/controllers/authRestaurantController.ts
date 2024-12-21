@@ -21,7 +21,7 @@ const generateAccessToken = ({
   JWT_SECRET: string;
 }) => {
   const token = jwt.sign(
-    { name: restaurant.name, id: restaurant.restaurant_id },
+    { name: restaurant.name, restaurant_id: restaurant.restaurant_id },
     JWT_SECRET,
     {
       expiresIn: '1h',
@@ -38,7 +38,7 @@ const generateRefreshToken = ({
   JWT_REFRESH_SECRET: string;
 }) => {
   const refreshToken = jwt.sign(
-    { name: restaurant.name, id: restaurant.restaurant_id },
+    { name: restaurant.name, restaurant_id: restaurant.restaurant_id },
     JWT_REFRESH_SECRET,
     {
       expiresIn: '7d',
@@ -105,6 +105,7 @@ const signIn = async (req: Request, res: Response) => {
       return;
     }
     const token = generateAccessToken({ restaurant, JWT_SECRET });
+    console.log('Received Token Restaurant:', token);
     const refreshToken = generateRefreshToken({
       restaurant,
       JWT_REFRESH_SECRET,
@@ -119,10 +120,9 @@ const signIn = async (req: Request, res: Response) => {
       success: true,
       message: 'User signed in successfully.',
       data: {
-        restaurant,
+        name,
         token,
-        refreshToken,
-        restaurantId: restaurant.restaurant_id,
+        restaurant_id: restaurant.restaurant_id,
       },
     });
   } catch (err: unknown) {

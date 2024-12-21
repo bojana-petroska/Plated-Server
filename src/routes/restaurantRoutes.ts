@@ -7,6 +7,7 @@ import { userAuth } from '../middlewares/auth.js';
 const router = Router();
 
 router.get('/', userAuth, restaurantController.getAllRestaurants);
+router.get('/own', restaurantAuth, restaurantController.getOwnRestaurant);
 router.get('/:id', userAuth, restaurantController.getRestaurant);
 router.post('/', restaurantAuth, restaurantController.createRestaurant);
 router.put('/:id', restaurantAuth, restaurantController.updateRestaurant);
