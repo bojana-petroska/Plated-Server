@@ -8,7 +8,7 @@ import {
 import { MenuItem } from './MenuItem.js';
 import { Order } from './Order.js';
 import { Courier } from './Courier.js';
-import { Notification } from './Notification.js'
+import { Notification } from './Notification.js';
 
 @Entity()
 export class Restaurant {
@@ -45,7 +45,12 @@ export class Restaurant {
   @Column({ type: 'bool', default: true, nullable: true })
   isOpen: boolean;
 
-  @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant, { cascade: true })
+  @Column({ nullable: true })
+  rating: number;
+
+  @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant, {
+    cascade: true,
+  })
   menu: Relation<MenuItem[]>;
 
   @OneToMany(() => Order, (order) => order.restaurant, { cascade: true })

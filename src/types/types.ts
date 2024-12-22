@@ -17,6 +17,7 @@ export interface IRestaurant {
   role?: string;
   menu?: IMenuItem[];
   isOpen?: boolean;
+  rating?: number;
 }
 
 export type RestaurantInput = Omit<IRestaurant, 'restaurant_id' | 'menu'>;
