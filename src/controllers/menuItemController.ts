@@ -15,7 +15,7 @@ const getAllMenuItems = async (req: Request, res: Response) => {
       limit,
       keyword
     );
-    res.status(200).json(menuItems);
+    res.status(200).json(menuItems.data);
   } catch (err) {
     res
       .status(500)
