@@ -117,7 +117,7 @@ const signIn = async (req: Request, res: Response) => {
     res.status(200).send({
       success: true,
       message: 'User signed in successfully.',
-      data: { userName, token },
+      data: { userName, token, refreshToken },
     });
   } catch (err: unknown) {
     res.status(500).send({ message: 'SignIn error:' });

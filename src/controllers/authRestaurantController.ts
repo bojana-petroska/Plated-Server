@@ -122,6 +122,7 @@ const signIn = async (req: Request, res: Response) => {
       data: {
         name,
         token,
+        refreshToken,
         restaurant_id: restaurant.restaurant_id,
       },
     });
