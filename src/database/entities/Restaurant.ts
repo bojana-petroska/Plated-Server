@@ -48,6 +48,9 @@ export class Restaurant {
   @Column({ nullable: true })
   rating: number;
 
+  @Column({ nullable: true })
+  imageUrl: string;
+
   @OneToMany(() => MenuItem, (menuItem) => menuItem.restaurant, {
     cascade: true,
   })
