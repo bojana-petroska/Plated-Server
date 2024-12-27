@@ -48,11 +48,17 @@ const createMenuItem = async (req: Request, res: Response) => {
   const restaurantId = parseInt(req.params.id) || -1;
 
   try {
-    const newMenuItem = await menuItemRepo.createMenuItemForARestaurant(
-      restaurantId,
-      req.body
-    );
-    res.status(201).json(newMenuItem);
+    const menuItems = req.body;
+    const createdMenuItems = [];
+
+    for (const menuItemData of menuItems) {
+      const newMenuItem = await menuItemRepo.createMenuItemForARestaurant(
+        restaurantId,
+        menuItemData
+      );
+      createdMenuItems.push(newMenuItem);
+    }
+    res.status(201).json(createdMenuItems);
   } catch (err) {
     res
       .status(400)

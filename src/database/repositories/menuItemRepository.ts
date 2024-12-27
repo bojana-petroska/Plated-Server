@@ -60,6 +60,9 @@ const createMenuItemForARestaurant = async (
     ...menuItemData,
     restaurant: { restaurant_id: restaurantId },
   };
+
+  console.log('Menu Item Data:', menuItem);
+
   const newMenuItem = await menuItemRepository.save(menuItem);
   return newMenuItem;
 };

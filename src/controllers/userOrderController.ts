@@ -3,7 +3,10 @@ import orderRepo from '../database/repositories/userOrderRepository.js';
 import { io } from '../server.js';
 import { OrderInput } from 'src/types/types.js';
 
-const getAllOrders = async (req: Request & { payload?: any }, res: Response) => {
+const getAllOrders = async (
+  req: Request & { payload?: any },
+  res: Response
+) => {
   const user_id = req.payload?.user_id;
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
@@ -44,6 +47,7 @@ const getOneOrder = async (req: Request & { payload?: any }, res: Response) => {
 const createOrder = async (req: Request & { payload?: any }, res: Response) => {
   try {
     const user_id = req.payload?.user_id;
+    const { restaurant_id } = req.body;
     if (!user_id) {
       res.status(401).send('User is not authenticated.');
       return;
@@ -51,12 +55,14 @@ const createOrder = async (req: Request & { payload?: any }, res: Response) => {
 
     const orderInput: OrderInput = { ...req.body };
     const newOrder = await orderRepo.createOrderFromUser(orderInput, user_id);
-    console.log(newOrder);
+    console.log('New Order:', newOrder);
+    console.log('Restaurant ID:', restaurant_id);
 
     // Send a notification to the restaurant
-    const restaurantId = newOrder.restaurant?.restaurant_id;
+    const restaurantId = newOrder.restaurant?.restaurant_id || restaurant_id;
     if (restaurantId) {
       io.to(restaurantId.toString()).emit('orderCreated', newOrder);
+      console.log('ORDER CREATED');
     }
 
     res.status(201).json(newOrder);
