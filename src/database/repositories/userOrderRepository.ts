@@ -57,7 +57,10 @@ const getOneOrderFromUser = async (user_id: number, order_id: number) => {
   return order;
 };
 
-const createOrderFromUser = async (orderInput: OrderInput, user_id: number): Promise<IOrder> => {
+const createOrderFromUser = async (
+  orderInput: OrderInput,
+  user_id: number
+): Promise<IOrder> => {
   const { restaurant_id, orderItems } = orderInput;
 
   const user = await userRepository.findOneBy({ user_id });
@@ -96,15 +99,15 @@ const createOrderFromUser = async (orderInput: OrderInput, user_id: number): Pro
 
   await orderRepository.save(newOrder);
 
-  const transformedOrderItems: Omit<IOrderItem, 'order'>[] = orderItemsEntities.map(
-    (item) => ({
+  const transformedOrderItems: Omit<IOrderItem, 'order'>[] =
+    orderItemsEntities.map((item) => ({
       orderItem_id: item.orderItem_id,
       menuItem: item.menuItem,
       quantity: item.quantity,
-    })
-  );
+    }));
 
   return {
+    user: newOrder.user,
     order_id: newOrder.order_id,
     totalPrice: newOrder.totalPrice,
     status: newOrder.status,

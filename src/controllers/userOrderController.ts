@@ -52,6 +52,8 @@ const createOrder = async (req: Request & { payload?: any }, res: Response) => {
       res.status(401).send('User is not authenticated.');
       return;
     }
+    console.log('TEST', user_id);
+    console.log(req.body);
 
     const orderInput: OrderInput = { ...req.body };
     const newOrder = await orderRepo.createOrderFromUser(orderInput, user_id);

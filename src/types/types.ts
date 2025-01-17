@@ -59,7 +59,6 @@ export enum OrderStatus {
   completed = 'completed',
   canceled = 'canceled',
 }
-
 export interface IOrder {
   order_id?: number;
   orderItems: IOrderItem[];
@@ -71,6 +70,7 @@ export interface IOrder {
     restaurant_id: number;
     name: string;
   };
+  user?: IUser;
 }
 
 export type OrderInput = Omit<
