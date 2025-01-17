@@ -11,8 +11,11 @@ import { AppDataSource } from './database/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
-import orderRouter from './routes/orderRoutes.js'
+import orderRouter from './routes/orderRoutes.js';
 import handleSocketConnection from './socketManager.js';
+
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.js';
 
 const app = express();
 const port = 5001;
@@ -38,6 +41,8 @@ app.use('/orders', orderRouter);
 app.use('/auth', authRouter);
 app.use('/images', imageRouter);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Error handling middleware
 app.use(errorHandler);
 
@@ -50,7 +55,10 @@ const startServer = async () => {
     console.log(`Database connected!`);
 
     server.listen(port, () => {
-      console.log(`server is running on http://localhost:${port}`);
+      console.log(`Server is running on http://localhost:${port}`);
+      console.log(
+        `Swagger docs available at http://localhost:${port}/api-docs`
+      );
     });
   } catch (error) {
     console.log(`Error connecting to the database: ${error}`);
