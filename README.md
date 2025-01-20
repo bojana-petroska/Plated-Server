@@ -4,7 +4,7 @@
 
 This is a **Food Ordering System** that enables users to order food from registered restaurants, track order statuses in real-time, and make payments. Restaurants can manage their menus and orders, while couriers can update delivery statuses. The app aims to streamline the food delivery experience using real-time updates via WebSockets.
 
-This repository focuses on the backend implementation of the system, including the API development, business logic, and WebSocket integration.
+This repository focuses on the **backend implementation** of the system, including the API development, business logic, and WebSocket integration.
 
 ---
 
