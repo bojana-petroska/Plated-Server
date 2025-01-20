@@ -36,7 +36,7 @@ This repository focuses on the backend implementation of the system, including t
 
 - **Backend**: Node.js, Express, TypeScript
 - **Database**: PostgreSQL with TypeORM
-- **WebSockets**: Socket.IO for real-time updates
+- **WebSockets**: Socket.IO
 - **Deployment**: Docker, AWS
 
 This repository contains only the **server-side** code.
@@ -61,6 +61,8 @@ The project uses a relational database. Below are the key tables:
 ---
 
 ## API Endpoints
+
+[Endpoints visualized](https://miro.com/app/board/uXjVLPdpN10=/)
 
 ### User
 - **POST** `/users/register`: Register a new user.
