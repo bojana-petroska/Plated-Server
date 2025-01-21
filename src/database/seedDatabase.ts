@@ -1,4 +1,4 @@
-import { AppDataSource } from './ormconfig.js';
+import { AppDataSource } from '../config/ormconfig.js';
 import { MenuItem } from './entities/MenuItem.js';
 import { Restaurant } from './entities/Restaurant.js';
 import { User } from './entities/User.js';

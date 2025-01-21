@@ -4,7 +4,7 @@ import {
   RestaurantInput,
 } from '../../types/types.js';
 import { Restaurant } from '../entities/Restaurant.js';
-import { AppDataSource } from '../ormconfig.js';
+import { AppDataSource } from '../../config/ormconfig.js';
 import bcrypt from 'bcrypt';
 
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
@@ -46,7 +46,9 @@ const getRestaurant = async (restaurant_id: number): Promise<IRestaurant> => {
   return restaurant;
 };
 
-const getOwnRestaurant = async (restaurant_id: number): Promise<IRestaurant | null> => {
+const getOwnRestaurant = async (
+  restaurant_id: number
+): Promise<IRestaurant | null> => {
   return await restaurantRepository.findOneBy({ restaurant_id: restaurant_id });
 };
 
@@ -72,7 +74,7 @@ const createRestaurant = async ({
     refreshToken: '',
     address: '',
     phoneNumber: '',
-    email:'',
+    email: '',
     openingHours: '',
     deliveryRadius: 0,
     menu: [],

@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../database/entities/User.js';
 import { Restaurant } from '../database/entities/Restaurant.js';
-import { AppDataSource } from '../database/ormconfig.js';
+import { AppDataSource } from '../config/ormconfig.js';
 
 const userRepository = AppDataSource.getRepository(User);
 const restaurantRepository = AppDataSource.getRepository(Restaurant);
@@ -49,7 +49,7 @@ export const restaurantAuth = async (
   next: NextFunction
 ) => {
   const token = req.headers['authorization']?.split(' ')[1];
-  console.log("Authorization Header:", req.headers['authorization']);
+  console.log('Authorization Header:', req.headers['authorization']);
   console.log('Received Token Restaurant:', token);
   if (!token) {
     res.status(401).send('No token provided');
@@ -59,7 +59,7 @@ export const restaurantAuth = async (
     const decoded = jwt.verify(token, JWT_SECRET!) as {
       restaurant_id: number;
     };
-    console.log("Decoded Token:", decoded);
+    console.log('Decoded Token:', decoded);
     const restaurant = await restaurantRepository.findOneBy({
       restaurant_id: decoded.restaurant_id,
     });

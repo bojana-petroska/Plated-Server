@@ -14,7 +14,7 @@ services:
     volumes:
       - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
 
-  backend:
+  plated:
     build:
       context: .
       dockerfile: Dockerfile
@@ -25,4 +25,6 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - .env
+      - .env.prod
+    environment:
+      NODE_ENV: production  

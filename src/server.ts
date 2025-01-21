@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { configs } from './config/env.js';
 dotenv.config();
 
 import express from 'express';
@@ -7,7 +8,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import userRouter from './routes/userRoutes.js';
 import restaurantRouter from './routes/restaurantRoutes.js';
-import { AppDataSource } from './database/ormconfig.js';
+import { AppDataSource } from './config/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
@@ -18,7 +19,7 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.js';
 
 const app = express();
-const port = 5001;
+// const port = 5001;
 
 const server = http.createServer(app);
 
@@ -54,10 +55,10 @@ const startServer = async () => {
     await AppDataSource.initialize();
     console.log(`Database connected!`);
 
-    server.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
+    server.listen(configs.PORT, () => {
+      console.log(`Server is running on http://localhost:${configs.PORT}`);
       console.log(
-        `Swagger docs available at http://localhost:${port}/api-docs`
+        `Swagger docs available at http://localhost:${configs.PORT}/api-docs`
       );
     });
   } catch (error) {

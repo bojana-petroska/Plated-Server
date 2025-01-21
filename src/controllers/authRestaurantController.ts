@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AppDataSource } from '../database/ormconfig.js';
+import { AppDataSource } from '../config/ormconfig.js';
 import { IRestaurant } from '../types/types.js';
 import { Restaurant } from '../database/entities/Restaurant.js';
 import restaurantRepo from '../database/repositories/restaurantRepository.js';

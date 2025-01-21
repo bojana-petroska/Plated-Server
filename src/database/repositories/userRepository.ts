@@ -1,6 +1,6 @@
 import { IUser, PaginatedResults, UserInput } from '../../types/types.js';
 import { User } from '../entities/User.js';
-import { AppDataSource } from '../ormconfig.js';
+import { AppDataSource } from '../../config/ormconfig.js';
 import bcrypt from 'bcrypt';
 import authController from '../../controllers/authUserController.js';
 
@@ -38,7 +38,16 @@ const getUserProfileData = async (
 ): Promise<IUser> => {
   const user = await userRepository.findOne({
     where: { user_id },
-    select: ['user_id', 'userName', 'email', 'address', 'phoneNumber', 'profilePicture', 'orders', 'notifications'],
+    select: [
+      'user_id',
+      'userName',
+      'email',
+      'address',
+      'phoneNumber',
+      'profilePicture',
+      'orders',
+      'notifications',
+    ],
   });
   if (!user) {
     throw new Error(`User with id: ${user_id} not found.`);

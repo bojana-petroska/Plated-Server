@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AppDataSource } from '../database/ormconfig.js';
+import { AppDataSource } from '../config/ormconfig.js';
 import { IUser } from '../types/types.js';
 import { User } from '../database/entities/User.js';
 import userRepo from '../database/repositories/userRepository.js';
@@ -21,13 +21,9 @@ const generateAccessToken = ({
   user: IUser;
   JWT_SECRET: string;
 }) => {
-  const token = jwt.sign(
-    { user_id: user.user_id },
-    JWT_SECRET,
-    {
-      expiresIn: '1h',
-    }
-  );
+  const token = jwt.sign({ user_id: user.user_id }, JWT_SECRET, {
+    expiresIn: '1h',
+  });
   return token;
 };
 
@@ -38,13 +34,9 @@ const generateRefreshToken = ({
   user: IUser;
   JWT_REFRESH_SECRET: string;
 }) => {
-  const refreshToken = jwt.sign(
-    { user_id: user.user_id },
-    JWT_REFRESH_SECRET,
-    {
-      expiresIn: '7d',
-    }
-  );
+  const refreshToken = jwt.sign({ user_id: user.user_id }, JWT_REFRESH_SECRET, {
+    expiresIn: '7d',
+  });
   return refreshToken;
 };
 
@@ -83,7 +75,7 @@ const signIn = async (req: Request, res: Response) => {
   console.log('INPUT PASSWORD:', password);
   try {
     const user = await userRepository.findOneBy({ userName });
-    console.log('FOUND USER:', user)
+    console.log('FOUND USER:', user);
     if (!user) {
       res.status(404).send('User Not Found!');
       return;

@@ -1,7 +1,7 @@
 import { IMenuItem, MenuItemInput } from '../../types/types.js';
 import { PaginatedResults } from '../../types/types.js';
 import { MenuItem } from '../entities/MenuItem.js';
-import { AppDataSource } from '../ormconfig.js';
+import { AppDataSource } from '../../config/ormconfig.js';
 import { Like } from 'typeorm';
 
 const menuItemRepository = AppDataSource.getRepository(MenuItem);
@@ -19,7 +19,7 @@ const getAllMenuItemsFromRestaurant = async (
   };
 
   if (keyword) {
-    findMenuItemFromRestaurant.name = Like(`%${keyword}%`)
+    findMenuItemFromRestaurant.name = Like(`%${keyword}%`);
   }
 
   const [menuItems, total] = await menuItemRepository.findAndCount({

@@ -9,7 +9,7 @@ import { Order } from '../entities/Order.js';
 import { OrderItem } from '../entities/OrderItem.js';
 import { Restaurant } from '../entities/Restaurant.js';
 import { User } from '../entities/User.js';
-import { AppDataSource } from '../ormconfig.js';
+import { AppDataSource } from '../../config/ormconfig.js';
 
 const orderRepository = AppDataSource.getRepository(Order);
 const userRepository = AppDataSource.getRepository(User);

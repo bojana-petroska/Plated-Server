@@ -4,4 +4,4 @@ src/.DS_Store
 req.rest
 .env
 src/utils/generateToken.ts
-
+.env.prod

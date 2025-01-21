@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec ts-node --esm src/server.ts",
+    "dev": "NODE_ENV=development nodemon --exec ts-node --esm src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "NODE_ENV=production node dist/server.js",
     "seed": "nodemon --exec ts-node --esm src/database/seedDatabase.ts",
     "test": "jest",
     "migration:generate": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js migration:generate -d src/database/ormconfig.ts -n Migration1 src/database/migrations/Migration1.ts",
