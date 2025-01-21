@@ -4,7 +4,7 @@
 
 This is a **Food Ordering System** that enables users to order food from registered restaurants, track order statuses in real-time, and make payments. Restaurants can manage their menus and orders, while couriers can update delivery statuses. The app aims to streamline the food delivery experience using real-time updates via WebSockets.
 
-This repository focuses on the backend implementation of the system, including the API development, business logic, and WebSocket integration.
+This repository focuses on the **backend implementation** of the system, including the API development, business logic, and WebSocket integration.
 
 ---
 
@@ -36,7 +36,7 @@ This repository focuses on the backend implementation of the system, including t
 
 - **Backend**: Node.js, Express, TypeScript
 - **Database**: PostgreSQL with TypeORM
-- **WebSockets**: Socket.IO for real-time updates
+- **WebSockets**: Socket.IO
 - **Deployment**: Docker, AWS
 
 This repository contains only the **server-side** code.
@@ -61,6 +61,8 @@ The project uses a relational database. Below are the key tables:
 ---
 
 ## API Endpoints
+
+[Endpoints visualized](https://miro.com/app/board/uXjVLPdpN10=/)
 
 ### User
 - **POST** `/users/register`: Register a new user.
