@@ -16,6 +16,7 @@ export const configs = {
     POSTGRES_USER: process.env.POSTGRES_USER || 'postgres',
     POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD || '',
     POSTGRES_DB: process.env.POSTGRES_DB || '',
+    POSTGRES_URL: process.env.POSTGRES_URL || '',
   },
   auth: {
     JWT_SECRET: process.env.JWT_SECRET,

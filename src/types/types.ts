@@ -38,6 +38,8 @@ export type MenuItemInput = Omit<IMenuItem, 'menuItem_id'>;
 export interface IUser {
   user_id?: number;
   userName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   password: string;
   address: string;

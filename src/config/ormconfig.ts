@@ -6,7 +6,8 @@ import entities from '../database/entities/index.js';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: configs.database.POSTGRES_HOST, // condition for npm run dev localhost and for docker postgres
+  url: configs.database.POSTGRES_URL,
+  // host: configs.database.POSTGRES_HOST, // condition for npm run dev localhost and for docker postgres
   port: configs.database.POSTGRES_PORT,
   username: configs.database.POSTGRES_USER,
   password: configs.database.POSTGRES_PASSWORD,

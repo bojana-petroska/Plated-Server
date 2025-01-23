@@ -5,3 +5,4 @@ req.rest
 .env
 src/utils/generateToken.ts
 .env.prod
+task-definition.json
