@@ -43,6 +43,8 @@ const getUserProfileData = async (
       'userName',
       'email',
       'address',
+      'firstName',
+      'lastName',
       'phoneNumber',
       'profilePicture',
       'orders',
