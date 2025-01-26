@@ -11,7 +11,6 @@ import restaurantRouter from './routes/restaurantRoutes.js';
 import { AppDataSource } from './config/ormconfig.js';
 import errorHandler from './middlewares/errorHandling.js';
 import authRouter from './routes/authRoutes.js';
-import imageRouter from './routes/imageRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
 import handleSocketConnection from './socketManager.js';
 
@@ -40,7 +39,6 @@ app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
 app.use('/orders', orderRouter);
 app.use('/auth', authRouter);
-app.use('/images', imageRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

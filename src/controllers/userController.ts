@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import userRepo from '../database/repositories/userRepository.js';
+import { generateUploadURL } from '../utils/s3aws.js';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
@@ -79,6 +80,16 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUploadURL = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id);
+  try {
+    const uploadURL = await generateUploadURL(userId);
+    res.status(200).json({ uploadURL });
+  } catch (err) {
+    res.status(500).send(`Error getting upload URL: ${err}`);
+  }
+}
+
 export default {
   getAllUsers,
   getUser,
@@ -86,4 +97,5 @@ export default {
   createUser,
   updateUser,
   deleteUser,
+  getUploadURL
 };
