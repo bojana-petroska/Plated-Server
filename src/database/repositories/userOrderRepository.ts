@@ -52,7 +52,6 @@ const getAllOrdersFromUser = async (
     currentPage: page,
     totalPages: Math.ceil(total / limit),
   };
-  
 };
 
 const getOneOrderFromUser = async (user_id: number, order_id: number) => {
