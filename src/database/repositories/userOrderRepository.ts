@@ -31,14 +31,28 @@ const getAllOrdersFromUser = async (
     where: { user: { user_id } },
     skip: offset,
     take: limit,
+    relations: ['restaurant', 'orderItems', 'orderItems.menuItem'],
   });
 
   return {
-    data: orders,
+    data: orders.map((order) => ({
+      order_id: order.order_id,
+      totalPrice: order.totalPrice,
+      status: order.status,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      orderItems: order.orderItems,
+      restaurant: {
+        restaurant_id: order.restaurant.restaurant_id,
+        name: order.restaurant.name,
+        imageUrl: order.restaurant.imageUrl,
+      },
+    })),
     totalItems: total,
     currentPage: page,
     totalPages: Math.ceil(total / limit),
   };
+  
 };
 
 const getOneOrderFromUser = async (user_id: number, order_id: number) => {
