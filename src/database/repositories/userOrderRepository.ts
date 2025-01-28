@@ -60,7 +60,7 @@ const getOneOrderFromUser = async (user_id: number, order_id: number) => {
       user: { user_id },
       order_id: order_id,
     },
-    relations: ['orderItems', 'orderItems.menuItem'],
+    relations: ['restaurant', 'orderItems', 'orderItems.menuItem'],
   });
 
   if (!order) {
