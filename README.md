@@ -65,23 +65,29 @@ The project uses a relational database. Below are the key tables:
 [Endpoints visualized](https://miro.com/app/board/uXjVLPdpN10=/)
 
 ### User
-- **POST** `/users/register`: Register a new user.
-- **POST** `/users/login`: User login.
-- **GET** `/users/profile`: Get user profile details.
-- **PUT** `/users/profile`: Update user profile.
-- **GET** `/users/orders`: Get user's order history.
+- **POST** `/users/signup`: Register a new user.
+- **POST** `/users/signin`: User login.
+- **GET** `/users`: Get all users.
+- **GET** `/users/profile`: Get authenticated user profile details.
+- **GET** `/users/:id`: Get details of a specific user.
+- **POST** `/users`: Create a new user.
+- **PUT** `/users/:id`: Update user details.
+- **DELETE** `/users/:id`: Delete a user.
 
 ### Restaurant
-- **POST** `/restaurants/register`: Register a new restaurant.
-- **PUT** `/restaurants/profile`: Update restaurant profile.
-- **POST** `/restaurants/menu`: Add a new menu item.
-- **PUT** `/restaurants/menu/:menuItemId`: Update a menu item.
-- **DELETE** `/restaurants/menu/:menuItemId`: Delete a menu item.
-- **GET** `/restaurants/orders`: Get all orders for the restaurant.
+- **POST** `/restaurants/signup`: Register a new restaurant.
+- **POST** `/restaurants/signin`: Restaurant login.
+- **GET** `/restaurants`: Get all restaurants.
+- **GET** `/restaurants/:id`: Get restaurant details.
+- **POST** `/restaurants`: Create a new restaurant.
+- **PUT** `/restaurants/:id`: Update restaurant profile.
+- **DELETE** `/restaurants/:id`: Delete a restaurant.
 
 ### Menu Item
 - **GET** `/restaurants/:restaurantId/menu`: Get all menu items for a restaurant.
 - **GET** `/restaurants/:restaurantId/menu/:menuItemId`: Get details of a specific menu item.
+- **POST** `/restaurants/:restaurantId/menu`: Create a new menu item.
+- **PUT** `/restaurants/:restaurantId/menu/:menuItemId`: Update an existing menu item.
 
 ### Order
 - **POST** `/users/:userId/orders`: Create a new order.
@@ -94,6 +100,15 @@ The project uses a relational database. Below are the key tables:
 - **POST** `/couriers/register`: Register a new courier.
 - **PUT** `/couriers/status`: Update courier availability.
 - **GET** `/couriers/orders`: Get all assigned orders.
+- **DELETE** `/couriers/:courierId`: Delete a courier.
+
+### Notification
+- **GET** `/notifications`: Get all notifications.
+- **POST** `/notifications`: Create a new notification.
+
+### Payment
+- **GET** `/payments`: Get payment details.
+- **POST** `/payments`: Create a new payment.
 
 ---
 
