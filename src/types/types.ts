@@ -18,6 +18,7 @@ export interface IRestaurant {
   menu?: IMenuItem[];
   isOpen?: boolean;
   rating?: number;
+  notifications?: INotification[];
 }
 
 export type RestaurantInput = Omit<IRestaurant, 'restaurant_id' | 'menu'>;
@@ -50,6 +51,7 @@ export interface IUser {
   token?: string;
   refreshToken?: string;
   createdAt?: Date;
+  notifications?: INotification[];
 }
 
 export type UserInput = Pick<IUser, 'userName' | 'email' | 'password'>;
@@ -100,4 +102,31 @@ export interface IOrderItem {
 export enum Availability {
   available = 'available',
   unavailable = 'unavailable',
+}
+
+export interface ICourier {
+  courier_id?: number;
+  name: string;
+  password: string;
+  email: string;
+  phoneNumber: string;
+  availability: Availability;
+  createdAt?: Date;
+  updatedAt?: Date;
+  restaurant?: IRestaurant;
+  user?: IUser;
+  notifications?: INotification[];
+}
+
+export type CourierInput = Omit<
+  ICourier,
+  'id' | 'phoneNumber' | 'availability' | 'createdAt' | 'updatedAt'
+>;
+
+export interface INotification {
+  notification_id?: number;
+  content: string;
+  restaurant?: IRestaurant;
+  user?: IUser;
+  courier?: ICourier;
 }

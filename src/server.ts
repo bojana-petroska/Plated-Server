@@ -16,6 +16,7 @@ import handleSocketConnection from './socketManager.js';
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.js';
+import courierRoutes from './routes/courierRoutes.js';
 
 const app = express();
 // const port = 5001;
@@ -35,10 +36,11 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 // Route setup
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
 app.use('/orders', orderRouter);
-app.use('/auth', authRouter);
+app.use('/courier', courierRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
