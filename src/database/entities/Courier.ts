@@ -42,7 +42,7 @@ export class Courier {
   @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
 
-  @ManyToOne(() => Restaurant, { nullable: false})
+  @ManyToOne(() => Restaurant, { nullable: true })
   restaurant: Relation<Restaurant>;
 
   @OneToMany(() => Notification, (notification) => notification.courier, {

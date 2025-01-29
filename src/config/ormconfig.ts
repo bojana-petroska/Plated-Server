@@ -12,9 +12,10 @@ export const AppDataSource = new DataSource({
   username: configs.database.POSTGRES_USER,
   password: configs.database.POSTGRES_PASSWORD,
   database: configs.database.POSTGRES_DB,
-  ssl: { rejectUnauthorized: false },
+  // ssl: { rejectUnauthorized: false },
   synchronize: true,
   logging: ['query', 'error'],
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,  //disable SSL for local development
   entities,
   // migrations: ['src/database/migrations/*.ts'],
   // migrationsRun: false,
