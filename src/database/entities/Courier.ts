@@ -11,6 +11,7 @@ import {
 import { Availability } from '../../types/types.js';
 import { Restaurant } from './Restaurant.js';
 import { Notification } from './Notification.js';
+import { Order } from './Order.js';
 
 @Entity()
 export class Courier {
@@ -49,4 +50,7 @@ export class Courier {
     cascade: true,
   })
   notifications: Relation<Notification[]>;
+
+  @OneToMany(() => Order, (order) => order.courier, { cascade: true })
+  order: Relation<Order[]>;
 }

@@ -1,7 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, OneToMany, Relation, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  Relation,
+  ManyToOne,
+} from 'typeorm';
 import { User } from './User.js';
 import { OrderItem } from './OrderItem.js';
 import { Payment } from './Payment.js';
+import { Order } from './Order.js';
 
 @Entity()
 export class Cart {
@@ -21,5 +31,11 @@ export class Cart {
   orderItems: Relation<OrderItem[]>;
 
   @OneToOne(() => Payment, { cascade: true })
-  payment: Relation<Payment>
+  payment: Relation<Payment>;
+
+  @OneToMany(() => Order, (order) => order.cart, {
+    cascade: true,
+    nullable: true,
+  })
+  order: Relation<Order[]>;
 }

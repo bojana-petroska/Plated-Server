@@ -7,11 +7,14 @@ import {
   OneToMany,
   UpdateDateColumn,
   Relation,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './User.js';
 import { Restaurant } from './Restaurant.js';
 import { OrderItem } from './OrderItem.js';
 import { OrderStatus } from '../../types/types.js';
+import { Cart } from './Cart.js';
+import { Courier } from './Courier.js';
 
 @Entity()
 export class Order {
@@ -42,4 +45,10 @@ export class Order {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   orderItems: Relation<OrderItem[]>;
+
+  @ManyToOne(() => Cart, (cart) => cart.order, { nullable: true })
+  cart: Relation<Cart>;
+
+  @ManyToOne(() => Courier, (courier) => courier.order, { nullable: true })
+  courier: Relation<Courier>;
 }

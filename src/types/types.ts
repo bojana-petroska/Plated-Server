@@ -5,6 +5,12 @@ export interface PaginatedResults<T> {
   totalPages: number;
 }
 
+export interface RestaurantSummary {
+  restaurant_id: number;
+  name: string;
+  imageUrl: string;
+}
+
 export interface IRestaurant {
   restaurant_id?: number;
   name: string;
@@ -59,8 +65,8 @@ export type UserInput = Pick<IUser, 'userName' | 'email' | 'password'>;
 export enum OrderStatus {
   pending = 'pending',
   preparing = 'preparing',
+  ready = 'ready for pick up',
   delivered = 'delivered',
-  completed = 'completed',
   canceled = 'canceled',
 }
 export interface IOrder {
@@ -70,11 +76,9 @@ export interface IOrder {
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
-  restaurant?: {
-    restaurant_id: number;
-    name: string;
-  };
+  restaurant?: RestaurantSummary;
   user?: IUser;
+  courier?: ICourier;
 }
 
 export type OrderInput = Omit<
@@ -116,6 +120,7 @@ export interface ICourier {
   restaurant?: IRestaurant;
   user?: IUser;
   notifications?: INotification[];
+  order: IOrder[];
 }
 
 export type CourierInput = Omit<

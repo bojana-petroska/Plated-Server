@@ -1,5 +1,13 @@
 import { Request, Response } from 'express';
 import restaurantRepo from '../database/repositories/restaurantRepository.js';
+import { Order } from '../database/entities/Order.js';
+import { Courier } from '../database/entities/Courier.js';
+import { AppDataSource } from '../config/ormconfig.js';
+import { io } from '../server.js';
+import { Availability } from '../types/types.js';
+
+const orderRepository = AppDataSource.getRepository(Order);
+const courierRepository = AppDataSource.getRepository(Courier);
 
 const getAllRestaurants = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
@@ -32,7 +40,7 @@ const getOwnRestaurant = async (
   res: Response
 ) => {
   const restaurant_id = req.payload?.restaurant_id;
-  console.log('REST_ID:', restaurant_id)
+  console.log('REST_ID:', restaurant_id);
 
   if (!restaurant_id) {
     res.status(400).send('Restaurant ID not found in request payload.');
@@ -84,6 +92,66 @@ const updateRestaurant = async (
   }
 };
 
+const updateOrderStatus = async (
+  req: Request & { payload?: any },
+  res: Response
+) => {
+  const restaurant_id = req.payload?.restaurant_id;
+  try {
+    const { order_id, status } = req.body;
+
+    const order = await orderRepository.findOne({
+      where: { order_id },
+      relations: ['restaurant', 'courier', 'user'],
+    });
+
+    if (!order) {
+      res.status(404).send('Order not found.');
+      return;
+    }
+
+    if (order.restaurant.restaurant_id !== restaurant_id) {
+      res.status(403).send('Unauthorized access.');
+      return;
+    }
+
+    order.status;
+    await orderRepository.save(order);
+
+    if (!order.courier) {
+      const availableCourier = await courierRepository.findOne({
+        where: { availability: Availability.available },
+      });
+      if (!availableCourier) {
+        res.status(404).send('No available courier found.');
+        return;
+      }
+      order.courier = availableCourier;
+      await orderRepository.save(order);
+    }
+
+    const courier_id = order.courier.courier_id;
+
+    if (!courier_id) {
+      res.status(400).send('No courier assigned to this order.');
+      return;
+    }
+
+    if (status === 'preparing') {
+      io.to(courier_id.toString()).emit('preparing', order);
+      console.log('order is being prepared!');
+    }
+    if (status === 'ready') {
+      io.to(courier_id.toString()).emit('ready', order);
+      console.log('order is ready for pick up!!');
+    }
+
+    res.status(201).json(order);
+  } catch (err) {
+    res.status(400).send(`Order was not successfully updated. Error: ${err}`);
+  }
+};
+
 const deleteRestaurant = async (
   req: Request & { payload?: any },
   res: Response
@@ -114,5 +182,6 @@ export default {
   getOwnRestaurant,
   createRestaurant,
   updateRestaurant,
+  updateOrderStatus,
   deleteRestaurant,
 };
