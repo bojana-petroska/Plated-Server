@@ -8,6 +8,7 @@ const router = Router();
 
 router.get('/', userController.getAllUsers);
 router.get('/profile', userAuth, userController.getUserProfileData);
+router.get('/upload/:id', userAuth, userController.getUploadURL);
 router.get('/:id', userAuth, userController.getUser);
 router.post('/', validateRequest(userValidationSchema), userAuth, userController.createUser);
 router.put('/:id', userAuth, userController.updateUser);
