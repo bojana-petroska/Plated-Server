@@ -96,9 +96,12 @@ const updateOrderStatus = async (
   req: Request & { payload?: any },
   res: Response
 ) => {
-  const restaurant_id = req.payload?.restaurant_id;
+  // const restaurant_id = req.payload?.restaurant_id;
   try {
-    const { order_id, status } = req.body;
+    const { status } = req.body;
+    const order_id = parseInt(req.params.order_id, 10);
+    const restaurant_id = parseInt(req.params.id, 10);
+    console.log('AM I UNAUTHORIZED --->', restaurant_id)
 
     const order = await orderRepository.findOne({
       where: { order_id },
@@ -111,11 +114,12 @@ const updateOrderStatus = async (
     }
 
     if (order.restaurant.restaurant_id !== restaurant_id) {
+      console.log('WHO IS UNAUTHORIZED --->', restaurant_id)
       res.status(403).send('Unauthorized access.');
       return;
     }
 
-    order.status;
+    order.status = status;
     await orderRepository.save(order);
 
     if (!order.courier) {

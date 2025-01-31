@@ -11,7 +11,7 @@ router.get('/own', restaurantAuth, restaurantController.getOwnRestaurant);
 router.get('/:id', userAuth, restaurantController.getRestaurant);
 router.post('/', restaurantAuth, restaurantController.createRestaurant);
 router.put('/:id', restaurantAuth, restaurantController.updateRestaurant);
-router.put('/:id/status', restaurantAuth, restaurantController.updateOrderStatus);
+router.put('/:id/:order_id/status', restaurantController.updateOrderStatus);
 router.delete('/:id', restaurantAuth, restaurantController.deleteRestaurant);
 
 router.use('/:id/menu', menuItemRoutes);
