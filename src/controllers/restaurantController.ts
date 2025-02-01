@@ -39,7 +39,7 @@ const getOwnRestaurant = async (
   req: Request & { payload?: any },
   res: Response
 ) => {
-  const restaurant_id = req.payload?.restaurant_id;
+  const restaurant_id = parseInt(req.params.id);
   console.log('REST_ID:', restaurant_id);
 
   if (!restaurant_id) {
