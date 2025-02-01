@@ -39,7 +39,8 @@ const createCourier = async ({
   });
 
   console.log(newCourier);
-  return await courierRepository.save(newCourier);
+  await courierRepository.save(newCourier);
+  return newCourier;
 };
 
 const updateCourier = async (

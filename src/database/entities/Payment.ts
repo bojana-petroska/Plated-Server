@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     ManyToOne,
     OneToOne,
+    Column,
   } from 'typeorm';
 import { User } from './User.js';
 import { Cart } from './Cart.js';
@@ -13,6 +14,12 @@ import { Cart } from './Cart.js';
   export class Payment {
     @PrimaryGeneratedColumn()
     payment_id: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+    amount: number;
+
+    @Column({ nullable: true })
+    currency: string;
 
     @CreateDateColumn()
     createdAt: Date;
