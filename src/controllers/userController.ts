@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import userRepo from '../database/repositories/userRepository.js';
-import { generateUploadURL } from '../utils/s3aws.js';
+import { generateUploadURL } from '../s3aws.js';
 
 const getAllUsers = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
