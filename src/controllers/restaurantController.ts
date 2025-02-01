@@ -135,6 +135,7 @@ const updateOrderStatus = async (
     }
 
     const courier_id = order.courier.courier_id;
+    const user_id = order.user.user_id;
 
     if (!courier_id) {
       res.status(400).send('No courier assigned to this order.');
@@ -143,6 +144,7 @@ const updateOrderStatus = async (
 
     if (status === 'preparing') {
       io.to(courier_id.toString()).emit('preparing', order);
+      io.to(user_id.toString()).emit('preparing', order);
       console.log('order is being prepared!');
     }
     if (status === 'ready') {
