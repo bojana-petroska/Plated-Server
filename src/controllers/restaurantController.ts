@@ -143,8 +143,10 @@ const updateOrderStatus = async (
     }
 
     if (status === 'preparing') {
-      io.to(courier_id.toString()).emit('preparing', order);
-      io.to(user_id.toString()).emit('preparing', order);
+      console.log('Emitting order status change for user:', user_id);
+      io.to(user_id.toString()).emit('orderStatusChanged', order);
+      console.log('EMITTED order status change for user:', user_id);
+      io.to(courier_id.toString()).emit('orderStatusChanged', order);
       console.log('order is being prepared!');
     }
     if (status === 'ready') {

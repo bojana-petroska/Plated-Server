@@ -5,7 +5,6 @@ const handleSocketConnection = (io: Server) => {
     console.log(`Client connected: ${socket.id}`);
 
     socket.on('restaurantRegister', ({ restaurantId }) => {
-      // socket.data.type = type;
       socket.data.restaurant_id = restaurantId;
       console.log(`Register event received for restaurantId: ${restaurantId}`);
 
