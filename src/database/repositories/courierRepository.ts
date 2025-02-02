@@ -13,6 +13,13 @@ const getCourier = async (courier_id: number): Promise<ICourier> => {
   return courier;
 };
 
+const findCourierByCredentials = async (
+  name: string,
+  email: string
+): Promise<ICourier | null> => {
+  return await courierRepository.findOne({ where: { name, email } });
+};
+
 const createCourier = async ({
   name,
   email,
@@ -57,6 +64,7 @@ const updateCourier = async (
 
 export default {
   getCourier,
+  findCourierByCredentials,
   createCourier,
   updateCourier,
 };
