@@ -12,23 +12,23 @@ This repository focuses on the **backend implementation** of the system, includi
 
 ### User
 - **Registration & Login**: Users can create accounts and log in using email and password.
-- **Profile Management**: Users can update profile details such as address and phone number.
-- **Order History**: Users can view their past orders along with detailed status updates.
+- **Profile Management**: Users can update upload a profile image (made with S3 Bucket), update profile details such as address and phone number.
+- **Order History**: Users can view their past orders along with detailed status updates and re-order again.
 - **Notifications**: Real-time notifications for order status updates via WebSockets.
 
 ### Restaurant
 - **Restaurant Registration**: Restaurants can register with required business details.
 - **Profile Management**: Restaurants can manage opening hours, delivery radius, and contact information.
 - **Menu Management**: Restaurants can add, update, and delete menu items.
-- **Order Management**: Restaurants can manage incoming orders and communicate with couriers in real-time.
+- **Order Management**: Restaurants can manage incoming orders and communicate with couriers in real-time via WebSockets.
 
 ### Courier
 - **Courier Registration**: Couriers can register and update their availability for delivery assignments.
-- **Real-Time Delivery Updates**: Couriers can provide real-time status updates for ongoing deliveries using WebSockets.
+- **Real-Time Delivery Updates**: Couriers can provide real-time status updates for ongoing deliveries via WebSockets.
 
 ### Order and Payment
 - **Order Creation & Management**: Users can place and modify orders. Restaurants manage the order status.
-- **Payment Processing**: Optional feature to handle payments and store payment history.
+- **Payment Processing**: Handle payments and store payment history.
 
 ---
 
@@ -36,6 +36,7 @@ This repository focuses on the **backend implementation** of the system, includi
 
 - **Backend**: Node.js, Express, TypeScript
 - **Database**: PostgreSQL with TypeORM
+- **JWT**: Used for securing user & restaurant authentication and authorization.
 - **WebSockets**: Socket.IO
 - **Deployment**: Docker, AWS
 
@@ -174,7 +175,6 @@ WebSockets (using Socket.IO) are used to provide real-time communication between
 
 ## Future Improvements
 
-- Implement full payment gateway integration.
-- Extend WebSocket functionality for live chat between users and couriers.
+- Implement reviews.
 - Improve admin dashboard features for better restaurant management.
 - Add automated testing for all endpoints and logic.

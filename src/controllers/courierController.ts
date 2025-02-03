@@ -14,6 +14,20 @@ const getCourier = async (req: Request, res: Response) => {
   }
 };
 
+const findCourierByCredentials =  async (req: Request, res: Response) => {
+  const { name, email } = req.body;
+  try {
+    const courier = await courierRepo.findCourierByCredentials(name, email);
+    if (courier) {
+      res.status(200).json(courier);
+    } else {
+      res.status(404).send('Courier not found.');
+    }
+  } catch (err) {
+    res.status(400).send(`Error: ${err}`);
+  }
+}
+
 const createCourier = async (req: Request, res: Response) => {
   try {
     const newCourier = await courierRepo.createCourier(req.body);
@@ -37,6 +51,7 @@ const updateCourier = async (req: Request, res: Response) => {
 
 export default {
   getCourier,
+  findCourierByCredentials,
   createCourier,
   updateCourier,
 };
