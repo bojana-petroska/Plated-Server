@@ -59,6 +59,7 @@ export interface IUser {
   refreshToken?: string;
   createdAt?: Date;
   notifications?: INotification[];
+  payment?: IPayment[];
 }
 
 export type UserInput = Pick<IUser, 'userName' | 'email' | 'password'>;
@@ -89,10 +90,11 @@ export type OrderInput = Omit<
 
 export interface ICart {
   cart_id?: number;
-  userId: number;
+  user: IUser;
   orderItems: IOrderItem[];
   createdAt: Date;
   updatedAt?: Date;
+  payment?: IPayment[];
 }
 
 export type CartInput = Omit<ICart, 'cart_id' | 'createdAt' | 'updatedAt'>;
@@ -135,4 +137,13 @@ export interface INotification {
   restaurant?: IRestaurant;
   user?: IUser;
   courier?: ICourier;
+}
+
+export interface IPayment {
+  payment_id?: number;
+  amount: number;
+  currency: string;
+  created_at?: Date;
+  userId: number;
+  // cartId: number;
 }
