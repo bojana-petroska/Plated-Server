@@ -45,7 +45,7 @@ export class Restaurant {
   @Column({ type: 'bool', default: true, nullable: true })
   isOpen: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'decimal', precision: 2, scale: 1, nullable: true })
   rating: number;
 
   @Column({ nullable: true })
