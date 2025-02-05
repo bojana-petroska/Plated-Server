@@ -14,7 +14,7 @@ const handleSocketConnection = (io: Server) => {
       }
     });
 
-    socket.on('registerUser', ({ userId }) => {
+    socket.on('userRegister', ({ userId }) => {
       socket.data.user_id = userId;
       console.log(`Register event received for user with id: ${userId}.`);
       if (userId) {
@@ -23,7 +23,7 @@ const handleSocketConnection = (io: Server) => {
       }
     });
 
-    socket.on('registerCourier', ({ courierId }) => {
+    socket.on('courierRegister', ({ courierId }) => {
       socket.data.courier_id = courierId;
       console.log(`Register event received for courier with id: ${courierId}.`);
       if (courierId) {

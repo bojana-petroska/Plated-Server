@@ -64,7 +64,7 @@ const createOrder = async (req: Request & { payload?: any }, res: Response) => {
     const restaurantId = newOrder.restaurant?.restaurant_id || restaurant_id;
     if (restaurantId) {
       io.to(restaurantId.toString()).emit('orderCreated', newOrder);
-      console.log('ORDER CREATED');
+      console.log('ORDER CREATED from User ID:', user_id);
     }
 
     res.status(201).json(newOrder);
