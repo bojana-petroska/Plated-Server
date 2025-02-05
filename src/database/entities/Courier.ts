@@ -30,6 +30,9 @@ export class Courier {
   @Column()
   phoneNumber: string;
 
+  @Column({ nullable: true})
+  address: string;
+
   @Column({
     type: 'enum',
     enum: Availability,

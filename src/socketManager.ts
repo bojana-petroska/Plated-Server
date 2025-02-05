@@ -32,6 +32,12 @@ const handleSocketConnection = (io: Server) => {
       }
     });
 
+    socket.on('courierMessage', ({ orderId, userId, message }) => {
+      console.log(`Courier message from courier for User ${userId}: ${message}`);
+      console.log(`Broadcasting to room: ${userId}`);
+      io.to(userId).emit('courierMessageReceived', { orderId, message });
+    });
+
     socket.on('disconnect', () => {
       console.log(`Client disconnected: ${socket.id}`);
     });

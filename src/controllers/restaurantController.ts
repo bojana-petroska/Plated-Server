@@ -147,12 +147,12 @@ const updateOrderStatus = async (
       io.to(user_id.toString()).emit('orderStatusChanged', order);
       console.log('EMITTED order status change for user:', user_id);
       io.to(courier_id.toString()).emit('orderStatusChanged', order);
-      console.log('EMITTED order status change for user:', courier_id);
+      console.log('EMITTED order status change for Courier:', courier_id);
       console.log('order is being prepared!');
     }
-    if (status === 'ready') {
-      io.to(courier_id.toString()).emit('ready', order);
-      console.log('order is ready for pick up!!');
+    if (status === 'delivered') {
+      io.to(restaurant_id.toString()).emit('orderStatusChanged', order);
+      console.log('the order is delivered!!');
     }
 
     res.status(201).json(order);
