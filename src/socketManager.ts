@@ -18,7 +18,7 @@ const handleSocketConnection = (io: Server) => {
       socket.data.user_id = userId;
       console.log(`Register event received for user with id: ${userId}.`);
       if (userId) {
-        socket.join(userId);
+        socket.join(userId.toString());
         console.log(`User with id: ${userId} joined room.`);
       }
     });
@@ -33,9 +33,10 @@ const handleSocketConnection = (io: Server) => {
     });
 
     socket.on('courierMessage', ({ orderId, userId, message }) => {
-      console.log(`Courier message from courier for User ${userId}: ${message}`);
+      console.log(`Courier message for order: ${orderId} courier for User ${userId}: ${message}`);
       console.log(`Broadcasting to room: ${userId}`);
-      io.to(userId).emit('courierMessageReceived', { orderId, message });
+      io.to(userId.toString()).emit('newCourierMessage', { orderId, message });
+      console.log(`Broadcasting AGAIN to room: userId: ${userId}, message: ${message}, orderId: ${orderId}`);
     });
 
     socket.on('disconnect', () => {
