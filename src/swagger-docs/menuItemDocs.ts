@@ -36,7 +36,7 @@
 
 /**
  * @swagger
- * /restaurants/{id}/menu-items:
+ * /restaurants/{id}/menu:
  *   get:
  *     summary: Get all menu items of a restaurant with pagination and keyword filtering
  *     tags: [Menu Items]
@@ -93,7 +93,7 @@
 
 /**
  * @swagger
- * /restaurants/{id}/menu-items:
+ * /restaurants/{id}/menu:
  *   post:
  *     summary: Create one or more menu items for a restaurant
  *     tags: [Menu Items]
@@ -141,7 +141,7 @@
 
 /**
  * @swagger
- * /restaurants/{id}/menu-items/{menuItem_id}:
+ * /restaurants/{id}/menu/{menuItem_id}:
  *   get:
  *     summary: Get details of a specific menu item
  *     tags: [Menu Items]
@@ -173,7 +173,7 @@
 
 /**
  * @swagger
- * /restaurants/{id}/menu-items/{menuItem_id}:
+ * /restaurants/{id}/menu/{menuItem_id}:
  *   put:
  *     summary: Update a specific menu item
  *     tags: [Menu Items]
@@ -224,7 +224,7 @@
 
 /**
  * @swagger
- * /restaurants/{id}/menu-items/{menuItem_id}:
+ * /restaurants/{id}/menu/{menuItem_id}:
  *   delete:
  *     summary: Delete a specific menu item
  *     tags: [Menu Items]

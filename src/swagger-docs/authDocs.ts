@@ -11,22 +11,37 @@
  * @swagger
  * components:
  *   schemas:
- *     AuthRequest:
+ *     UserAuthRequestSignUp:
  *       type: object
  *       properties:
  *         userName:
  *           type: string
  *           description: The username of the user
- *           example: "john_doe"
+ *           example: "compact_bo"
  *         email:
  *           type: string
  *           description: The email of the user
- *           example: "john@example.com"
+ *           example: "compact_bo@gmail.com"
  *         password:
  *           type: string
  *           description: The password for the account
- *           example: "securepassword123"
- *     AuthResponse:
+ *           example: "strongpassword10%"
+ *     UserAuthRequestSignIn:
+ *       type: object
+ *       properties:
+ *         userName:
+ *           type: string
+ *           description: The username of the user
+ *           example: "compact_bo"
+ *         email:
+ *           type: string
+ *           description: The email of the user
+ *           example: "compact_bo@gmail.com"
+ *         password:
+ *           type: string
+ *           description: The password for the account
+ *           example: "strongpassword10%"
+ *     UserAuthResponse:
  *       type: object
  *       properties:
  *         success:
@@ -42,7 +57,43 @@
  *           properties:
  *             userName:
  *               type: string
- *               example: "john_doe"
+ *               example: "compact_bo"
+ *             token:
+ *               type: string
+ *               description: The JWT access token
+ *               example: "eyJhbGciOiJIUzI1..."
+ *             refreshToken:
+ *               type: string
+ *               description: The JWT refresh token
+ *               example: "eyJhbGciOiJIUzI1..."
+ *     RestaurantAuthRequest:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the restaurant
+ *           example: "Mama Italiane"
+ *         password:
+ *           type: string
+ *           description: The password for the restaurant account
+ *           example: "strongpassword10%"
+ *     RestaurantAuthResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           description: Indicates success of the operation
+ *           example: true
+ *         message:
+ *           type: string
+ *           description: A message describing the result
+ *           example: "Restaurant signed in successfully."
+ *         data:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               example: "Mama Italiane"
  *             token:
  *               type: string
  *               description: The JWT access token
@@ -55,7 +106,7 @@
 
 /**
  * @swagger
- * /signup:
+ * /auth/signup:
  *   post:
  *     summary: Sign up a new user
  *     tags: [User Authentication]
@@ -64,7 +115,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthRequest'
+ *             $ref: '#/components/schemas/UserAuthRequestSignUp'
  *     responses:
  *       201:
  *         description: User created successfully
@@ -78,7 +129,7 @@
 
 /**
  * @swagger
- * /signin:
+ * /auth/signin:
  *   post:
  *     summary: Sign in an existing user
  *     tags: [User Authentication]
@@ -87,7 +138,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthRequest'
+ *             $ref: '#/components/schemas/UserAuthRequestSignIn'
  *     responses:
  *       200:
  *         description: User signed in successfully
@@ -103,7 +154,7 @@
 
 /**
  * @swagger
- * /refreshtoken:
+ * /auth/refreshtoken:
  *   post:
  *     summary: Generate a new access token using a refresh token
  *     tags: [User Authentication]
@@ -138,7 +189,7 @@
 
 /**
  * @swagger
- * /restaurant/signup:
+ * /auth/restaurant/signup:
  *   post:
  *     summary: Sign up a new restaurant
  *     tags: [Restaurant Authentication]
@@ -147,7 +198,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthRequest'
+ *             $ref: '#/components/schemas/RestaurantAuthRequest'
  *     responses:
  *       201:
  *         description: Restaurant created successfully
@@ -161,7 +212,7 @@
 
 /**
  * @swagger
- * /restaurant/signin:
+ * /auth/restaurant/signin:
  *   post:
  *     summary: Sign in an existing restaurant
  *     tags: [Restaurant Authentication]
@@ -170,7 +221,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthRequest'
+ *             $ref: '#/components/schemas/RestaurantAuthRequest'
  *     responses:
  *       200:
  *         description: Restaurant signed in successfully
@@ -186,7 +237,7 @@
 
 /**
  * @swagger
- * /restaurant/refreshtoken:
+ * /auth/restaurant/refreshtoken:
  *   post:
  *     summary: Generate a new access token for a restaurant using a refresh token
  *     tags: [Restaurant Authentication]

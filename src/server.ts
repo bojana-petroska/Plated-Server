@@ -22,7 +22,6 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.js';
 
 const app = express();
-// const port = 5001;
 
 const server = http.createServer(app);
 
@@ -34,11 +33,9 @@ const io = new Server(server, {
   },
 });
 
-// Middleware setup
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
-// Route setup
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/restaurants', restaurantRouter);
@@ -48,10 +45,8 @@ app.use('/payments', paymentsRoute);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Error handling middleware
 app.use(errorHandler);
 
-// Socket.io setup
 handleSocketConnection(io);
 
 const startServer = async () => {

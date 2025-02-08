@@ -118,7 +118,7 @@ const signIn = async (req: Request, res: Response) => {
 
     res.status(200).send({
       success: true,
-      message: 'User signed in successfully.',
+      message: 'Restaurant signed in successfully.',
       data: {
         name,
         token,
