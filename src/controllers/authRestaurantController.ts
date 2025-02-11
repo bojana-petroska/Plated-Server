@@ -56,7 +56,6 @@ const signUp = async (req: Request, res: Response) => {
       return;
     }
 
-    // console.log('hashed password!:', hashedPassword)
     const restaurant = await restaurantRepo.createRestaurant({
       name,
       password,
@@ -77,7 +76,6 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const signIn = async (req: Request, res: Response) => {
-  // console.log(req.body)
   const { name, password } = req.body;
   console.log('INPUT PASSWORD:', password);
   try {

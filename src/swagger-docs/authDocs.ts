@@ -72,11 +72,11 @@
  *         name:
  *           type: string
  *           description: The name of the restaurant
- *           example: "Mama Italiane"
+ *           example: "Mama Mia"
  *         password:
  *           type: string
  *           description: The password for the restaurant account
- *           example: "strongpassword10%"
+ *           example: "Sakamrakomet10%"
  *     RestaurantAuthResponse:
  *       type: object
  *       properties:
@@ -122,7 +122,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/UserAuthResponse'
  *       400:
  *         description: Invalid input or user already exists
  */
@@ -145,7 +145,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/UserAuthResponse'
  *       401:
  *         description: Invalid credentials
  *       404:
@@ -205,7 +205,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/RestaurantAuthResponse'
  *       400:
  *         description: Invalid input or restaurant already exists
  */
@@ -228,7 +228,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/RestaurantAuthResponse'
  *       401:
  *         description: Invalid credentials
  *       404:
